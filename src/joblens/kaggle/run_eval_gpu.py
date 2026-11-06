@@ -38,6 +38,7 @@ def main() -> None:
     from unsloth import FastLanguageModel
 
     from joblens.formatting import render_prompt, truncate_text
+    from joblens.jsonio import jsonl_lines
     from joblens.teacher import LabelItem
     from joblens.training_config import STUDENT_MODEL, STUDENT_REVISION
 
@@ -66,8 +67,8 @@ def main() -> None:
 
     items = [
         LabelItem.model_validate_json(x)
-        for x in args.inputs.read_text().splitlines()
-        if x.strip() and json.loads(x)["split"] == "test"
+        for x in jsonl_lines(args.inputs)
+        if json.loads(x)["split"] == "test"
     ]
     if args.limit:
         items = items[: args.limit]

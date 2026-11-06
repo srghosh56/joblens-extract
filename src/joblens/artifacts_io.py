@@ -18,6 +18,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from joblens.jsonio import jsonl_lines
 from joblens.schema import JobPosting
 
 PRED_KEYS = {"system", "id", "output"}
@@ -40,7 +41,7 @@ def _find(root: Path, name: str) -> Path | None:
 
 def validate_labels_file(path: Path) -> list[str]:
     errs = []
-    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for i, line in enumerate(jsonl_lines(path), 1):
         if not line.strip():
             continue
         try:
@@ -55,7 +56,7 @@ def validate_labels_file(path: Path) -> list[str]:
 
 def validate_predictions_file(path: Path) -> list[str]:
     errs = []
-    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for i, line in enumerate(jsonl_lines(path), 1):
         if not line.strip():
             continue
         try:

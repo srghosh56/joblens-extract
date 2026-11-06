@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import typer
 
+from joblens.jsonio import jsonl_lines
+
 app = typer.Typer(help="JobLens Extract pipeline", no_args_is_help=True)
 
 
@@ -159,7 +161,7 @@ def eval_api() -> None:
             fg="yellow",
         )
         raise typer.Exit(1)
-    n = sum(1 for line in p.read_text().splitlines() if line.strip())
+    n = len(jsonl_lines(p))
     typer.echo(f"system (d) predictions present: {n} (scored by `make eval`)")
 
 

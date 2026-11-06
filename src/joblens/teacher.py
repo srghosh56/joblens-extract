@@ -18,6 +18,7 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel
 
+from joblens.jsonio import jsonl_lines
 from joblens.parsing import parse_output
 from joblens.prompts import PROMPT_VERSION, build_messages, reask_message
 from joblens.schema import ALL_FIELDS, SCHEMA_VERSION, JobPosting
@@ -90,10 +91,9 @@ class LabelCache:
         self.path = path
         self.data: dict[str, dict[str, Any]] = {}
         if path is not None and path.exists():
-            for line in path.read_text(encoding="utf-8").splitlines():
-                if line.strip():
-                    rec = json.loads(line)
-                    self.data[rec["key"]] = rec
+            for line in jsonl_lines(path):
+                rec = json.loads(line)
+                self.data[rec["key"]] = rec
 
     def get(self, key: str) -> dict[str, Any] | None:
         return self.data.get(key)

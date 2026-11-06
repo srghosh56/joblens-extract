@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from joblens.evaluate import SYSTEM_NAMES
+from joblens.jsonio import jsonl_lines
 from joblens.metrics import HEADLINE
 
 NM = "not measured"
@@ -258,7 +259,7 @@ def measured_for_costs(artifacts: Path) -> dict[str, dict[str, Any]]:
         }
     lat = pred / "latency_d.jsonl"
     if lat.exists():
-        recs = [json.loads(x) for x in lat.read_text().splitlines() if x.strip()]
+        recs = [json.loads(x) for x in jsonl_lines(lat)]
         if recs:
             out.setdefault("d", {})
             out["d"]["mean_prompt_tokens"] = sum(r["prompt_tokens"] for r in recs) / len(recs)

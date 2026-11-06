@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from joblens.gold import load_label_file
+from joblens.jsonio import jsonl_lines
 from joblens.metrics import HEADLINE, PostingScore, paired_bootstrap_diff, report, score_posting
 from joblens.parsing import parse_output
 
@@ -27,7 +28,7 @@ SUBSET_SYSTEMS = {"gguf"}  # scored only on the postings they were run on
 
 def load_predictions(path: Path) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in jsonl_lines(path):
         if line.strip():
             rec = json.loads(line)
             out[rec["id"]] = rec

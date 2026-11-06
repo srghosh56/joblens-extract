@@ -17,9 +17,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+from joblens.jsonio import jsonl_lines
+
 
 def load_examples(data_dir: Path, split: str) -> list[dict[str, Any]]:
-    return [json.loads(x) for x in (data_dir / f"sft_{split}.jsonl").read_text().splitlines() if x]
+    return [json.loads(x) for x in jsonl_lines(data_dir / f"sft_{split}.jsonl")]
 
 
 def main() -> None:

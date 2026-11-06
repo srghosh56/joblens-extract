@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from joblens.jsonio import jsonl_lines
 from joblens.prompts import answer_json, build_messages
 from joblens.schema import JobPosting
 
@@ -86,13 +87,11 @@ def answer_span(example: Example) -> list[int]:
 
 def load_teacher_labels(path: Any) -> dict[str, JobPosting]:
     import json
-    from pathlib import Path
 
     out: dict[str, JobPosting] = {}
-    for line in Path(path).read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            rec = json.loads(line)
-            out[f"{rec['source']}:{rec['source_id']}"] = JobPosting.model_validate(rec["label"])
+    for line in jsonl_lines(path):
+        rec = json.loads(line)
+        out[f"{rec['source']}:{rec['source_id']}"] = JobPosting.model_validate(rec["label"])
     return out
 
 

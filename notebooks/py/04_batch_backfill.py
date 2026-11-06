@@ -51,6 +51,7 @@ from unsloth import FastLanguageModel
 
 from joblens.backfill import BackfillInput, make_record, validate_file
 from joblens.formatting import render_prompt, truncate_text
+from joblens.jsonio import jsonl_lines
 
 model, tok = FastLanguageModel.from_pretrained(
     model_name=ADAPTER,
@@ -62,9 +63,7 @@ FastLanguageModel.for_inference(model)
 tok.pad_token = tok.pad_token or tok.eos_token
 tok.padding_side = "left"
 
-inputs = [
-    BackfillInput.model_validate_json(x) for x in EXPORT.read_text().splitlines() if x.strip()
-]
+inputs = [BackfillInput.model_validate_json(x) for x in jsonl_lines(EXPORT)]
 print(len(inputs), "postings")
 
 # %%

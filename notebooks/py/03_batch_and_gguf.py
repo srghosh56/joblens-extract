@@ -70,12 +70,13 @@ print(gguf_files)
 
 # %%
 from joblens.formatting import render_prompt, truncate_text
+from joblens.jsonio import jsonl_lines
 from joblens.teacher import LabelItem
 
 items = [
     LabelItem.model_validate_json(x)
-    for x in (BUNDLE / "teacher_inputs.jsonl").read_text().splitlines()
-    if x.strip() and json.loads(x)["split"] == "test"
+    for x in jsonl_lines(BUNDLE / "teacher_inputs.jsonl")
+    if json.loads(x)["split"] == "test"
 ]
 prompts = [
     render_prompt(tok, it.title, truncate_text(tok, it.text, cfg["max_input_tokens"])[0])

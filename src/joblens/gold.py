@@ -12,6 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from joblens.jsonio import jsonl_lines
 from joblens.schema import ALL_FIELDS, SCHEMA_VERSION, JobPosting
 
 ENUM_LIST_FIELDS = ("required_skills", "nice_to_have_skills")
@@ -22,7 +23,7 @@ def load_label_file(path: Path) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
     if not path.exists():
         return out
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in jsonl_lines(path):
         if not line.strip():
             continue
         rec = json.loads(line)

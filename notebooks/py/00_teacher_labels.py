@@ -41,6 +41,7 @@ sys.path.insert(0, str(BUNDLE / "joblens_src"))
 cfg = json.loads((BUNDLE / "bundle_config.json").read_text())
 print({k: v for k, v in cfg.items() if k != "notes"})
 
+from joblens.jsonio import jsonl_lines
 from joblens.kaggle.vllm_backend import VLLMBackend
 from joblens.teacher import (
     LabelCache,
@@ -52,9 +53,7 @@ from joblens.teacher import (
 )
 
 items = [
-    LabelItem.model_validate_json(line)
-    for line in (BUNDLE / "teacher_inputs.jsonl").read_text().splitlines()
-    if line.strip()
+    LabelItem.model_validate_json(line) for line in jsonl_lines(BUNDLE / "teacher_inputs.jsonl")
 ]
 by_split = {s: [it for it in items if it.split == s] for s in ("train", "val", "test")}
 LIMIT = int(os.environ.get("JOBLENS_LIMIT", "0"))  # e.g. 20 for a smoke test

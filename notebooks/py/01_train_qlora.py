@@ -59,15 +59,12 @@ print("teacher labels from", LABELS)
 from transformers import AutoTokenizer
 
 from joblens.formatting import build_sft_files, load_teacher_labels
+from joblens.jsonio import jsonl_lines
 from joblens.teacher import LabelItem
 from joblens.training_config import CONFIGS, STUDENT_MODEL, STUDENT_REVISION
 
 tok = AutoTokenizer.from_pretrained(STUDENT_MODEL, revision=STUDENT_REVISION)
-items = [
-    LabelItem.model_validate_json(x)
-    for x in (BUNDLE / "teacher_inputs.jsonl").read_text().splitlines()
-    if x.strip()
-]
+items = [LabelItem.model_validate_json(x) for x in jsonl_lines(BUNDLE / "teacher_inputs.jsonl")]
 LIMIT = int(os.environ.get("JOBLENS_LIMIT", "0"))  # e.g. 220 for a smoke test
 if LIMIT:
     items = [

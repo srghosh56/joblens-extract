@@ -14,6 +14,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from joblens.config import MODEL_VERSION
+from joblens.jsonio import jsonl_lines
 from joblens.parsing import parse_output
 from joblens.schema import SCHEMA_VERSION, JobPosting
 
@@ -73,7 +74,7 @@ def validate_file(path: Path) -> dict[str, Any]:
     n = ok = 0
     errors: list[str] = []
     seen: set[tuple[str, str]] = set()
-    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for i, line in enumerate(jsonl_lines(path), 1):
         if not line.strip():
             continue
         n += 1
