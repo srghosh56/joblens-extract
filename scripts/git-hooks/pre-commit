@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Keeps pre-commit's cache inside the project folder.
+ROOT="$(git rev-parse --show-toplevel)"
+export PRE_COMMIT_HOME="$ROOT/.cache/pre-commit"
+exec "$ROOT/.venv/bin/pre-commit" run --hook-stage pre-commit

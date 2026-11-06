@@ -1,0 +1,25 @@
+# All hooks are local: they use the project venv (uv) and the project-local gitleaks
+# binary in .tools/ (installed by `make setup`), so nothing is installed system-wide.
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks (staged changes)
+        entry: .tools/gitleaks git --pre-commit --staged --redact --no-banner
+        language: system
+        pass_filenames: false
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --force-exclude
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format --check
+        entry: uv run ruff format --check --force-exclude
+        language: system
+        types: [python]
+      - id: no-raw-data
+        name: block raw posting data
+        entry: "raw/interim/test_inputs data must never be committed"
+        language: fail
+        files: ^(data/raw/|data/interim/|data/labeled/|data/test_inputs/|kaggle_upload/)

@@ -1,0 +1,33 @@
+# secrets
+.env
+.env.*
+!.env.example
+# environments / tools / caches
+.venv/
+.tools/
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.DS_Store
+# raw data: never commit posting texts
+data/raw/
+data/interim/
+data/labeled/
+data/gold/texts*
+data/test_inputs/
+kaggle_upload/
+mlruns/
+# artifacts: ignored except small result files
+artifacts/*
+!artifacts/README.md
+!artifacts/results/
+artifacts/results/*
+!artifacts/results/*.json
+!artifacts/results/*.csv
+!artifacts/results/*.png

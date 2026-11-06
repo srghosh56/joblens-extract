@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "JobLens Extract: fine-tuned small open-weight model vs large model for job-posting extraction"
+authors:
+  - family-names: Ghosh
+    given-names: Srobona
+version: 1.0.0
+date-released: 2026-11-01
+license: MIT
+repository-code: "https://github.com/srghosh56/joblens-extract"
