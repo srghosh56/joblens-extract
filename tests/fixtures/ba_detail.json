@@ -1,0 +1,47 @@
+{
+ "stellenangebotsart": "ARBEIT",
+ "stellenangebotsTitel": "Softwareentwickler 0 (m/w/d)",
+ "quereinstiegGeeignet": false,
+ "stellenangebotsBeschreibung": "Ihre Aufgaben\n • Entwicklung von Backend-Services in Java\n • 3+ Jahre Berufserfahrung\nIhr Profil\n • Sehr gute Deutschkenntnisse (C1)\nWir bieten\n • 65.000 € brutto/Jahr, unbefristet, 2 Tage Homeoffice",
+ "arbeitszeitSchichtNachtWochenende": false,
+ "arbeitszeitTeilzeitAbend": false,
+ "arbeitszeitTeilzeitNachmittag": false,
+ "arbeitszeitTeilzeitVormittag": false,
+ "arbeitszeitTeilzeitFlexibel": false,
+ "arbeitszeitVollzeit": true,
+ "eintrittszeitraum": {
+  "von": "2026-10-21"
+ },
+ "verguetungsangabe": "KEINE_ANGABEN",
+ "vertragsdauer": "UNBEFRISTET",
+ "istGeringfuegigeBeschaeftigung": false,
+ "istBehinderungGefordert": false,
+ "stellenlokationen": [
+  {
+   "adresse": {
+    "plz": "90429",
+    "ort": "Nürnberg, Mittelfranken",
+    "region": "BAYERN",
+    "land": "DEUTSCHLAND"
+   },
+   "breite": 49.4562524,
+   "laenge": 11.0441458
+  }
+ ],
+ "homeofficemoeglich": false,
+ "chiffrenummer": "101150",
+ "istPrivateArbeitsvermittlung": false,
+ "istArbeitnehmerUeberlassung": false,
+ "veroeffentlichungszeitraum": {
+  "von": "2026-10-21"
+ },
+ "datumErsteVeroeffentlichung": "2026-10-21",
+ "aenderungsdatum": "2026-10-21T14:12:41.595",
+ "externeURL": "https://example.org/job",
+ "istBetreut": false,
+ "hauptberuf": "Software-Architect",
+ "firma": "Synthetische Firma 0 GmbH",
+ "allianzpartnerUrl": "www.jobexport.de",
+ "allianzpartnerName": "jobexport.de",
+ "referenznummer": "10000-SYNTH0-S"
+}

@@ -1,0 +1,93 @@
+{
+ "ergebnisliste": [
+  {
+   "stellenangebotsart": "ARBEIT",
+   "stellenangebotsTitel": "Softwareentwickler 0 (m/w/d)",
+   "quereinstiegGeeignet": false,
+   "arbeitszeitSchichtNachtWochenende": false,
+   "arbeitszeitTeilzeitAbend": false,
+   "arbeitszeitTeilzeitNachmittag": false,
+   "arbeitszeitTeilzeitVormittag": false,
+   "arbeitszeitTeilzeitFlexibel": false,
+   "arbeitszeitVollzeit": true,
+   "eintrittszeitraum": {
+    "von": "2026-10-21"
+   },
+   "verguetungsangabe": "KEINE_ANGABEN",
+   "vertragsdauer": "UNBEFRISTET",
+   "istGeringfuegigeBeschaeftigung": false,
+   "stellenlokationen": [
+    {
+     "adresse": {
+      "plz": "90429",
+      "ort": "Nürnberg, Mittelfranken",
+      "region": "BAYERN",
+      "land": "DEUTSCHLAND"
+     },
+     "breite": 49.4562524,
+     "laenge": 11.0441458
+    }
+   ],
+   "homeofficemoeglich": false,
+   "chiffrenummer": "101150",
+   "veroeffentlichungszeitraum": {
+    "von": "2026-10-21"
+   },
+   "datumErsteVeroeffentlichung": "2026-10-21",
+   "aenderungsdatum": "2026-10-21T14:12:41.595",
+   "externeURL": "https://example.org/job",
+   "hauptberuf": "Software-Architect",
+   "firma": "Synthetische Firma 0 GmbH",
+   "referenznummer": "10000-SYNTH0-S",
+   "alleBerufe": [
+    "Software-Architect"
+   ]
+  },
+  {
+   "stellenangebotsart": "ARBEIT",
+   "stellenangebotsTitel": "Softwareentwickler 1 (m/w/d)",
+   "quereinstiegGeeignet": false,
+   "arbeitszeitSchichtNachtWochenende": false,
+   "arbeitszeitTeilzeitAbend": false,
+   "arbeitszeitTeilzeitNachmittag": false,
+   "arbeitszeitTeilzeitVormittag": false,
+   "arbeitszeitTeilzeitFlexibel": false,
+   "arbeitszeitVollzeit": true,
+   "eintrittszeitraum": {
+    "von": "2026-10-21"
+   },
+   "verguetungsangabe": "KEINE_ANGABEN",
+   "vertragsdauer": "UNBEFRISTET",
+   "istGeringfuegigeBeschaeftigung": false,
+   "stellenlokationen": [
+    {
+     "adresse": {
+      "plz": "90429",
+      "ort": "Nürnberg, Mittelfranken",
+      "region": "BAYERN",
+      "land": "DEUTSCHLAND"
+     },
+     "breite": 49.4562524,
+     "laenge": 11.0441458
+    }
+   ],
+   "homeofficemoeglich": false,
+   "chiffrenummer": "101150",
+   "veroeffentlichungszeitraum": {
+    "von": "2026-10-21"
+   },
+   "datumErsteVeroeffentlichung": "2026-10-21",
+   "aenderungsdatum": "2026-10-21T14:12:41.595",
+   "externeURL": "https://example.org/job",
+   "hauptberuf": "Software-Architect",
+   "firma": "Synthetische Firma 1 GmbH",
+   "referenznummer": "10000-SYNTH1-S",
+   "alleBerufe": [
+    "Software-Architect"
+   ]
+  }
+ ],
+ "maxErgebnisse": 2,
+ "page": 1,
+ "size": 2
+}
