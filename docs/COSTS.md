@@ -1,0 +1,37 @@
+# Costs: API vs own GPU vs CPU
+
+A customer asks: *"We need to pull structured fields out of job postings every month. Should we call a large model's API, run a fine-tuned small model on our own GPU, or run it on CPUs?"*
+
+The tables below are generated from measured throughput and token counts (`make costs report`). Self-hosted figures are **estimates**: measured Kaggle throughput × the on-demand price of a comparable AWS instance, assuming the machine is busy 100% of the time it is paid for. API figures use Mistral's public list price applied to the measured token counts. Sources and dates are in `artifacts/results/costs.json` and DECISIONS D-017.
+
+<!-- BEGIN GENERATED -->
+| System | Hardware basis | Throughput (postings/s) | USD / 1k self-hosted (estimate) | USD / 1k at Mistral API list price |
+|---|---|---|---|---|
+| all | not measured | not measured | not measured | not measured |
+
+| System | 10k / month | 100k / month | 1M / month | basis |
+|---|---|---|---|---|
+| all | not measured | not measured | not measured | run `make costs` after importing artifacts |
+<!-- END GENERATED -->
+
+## How to decide (independent of the exact numbers)
+
+**1. Volume and utilisation decide self-hosting.** A GPU bills by the hour whether it works or not. At 10k postings a month, a dedicated GPU sits idle most of the time, so per-posting cost is dominated by idle hours. Batch jobs that start a GPU, process the month's backlog, and stop again avoid this. The API bills per token, so it scales down to zero. Rule of thumb: compare the API's monthly bill with the cost of the *hours you would actually keep a GPU running*, not with the 100%-utilisation figure in the table.
+
+**2. Quality gap first, cost second.** If system (c) is significantly worse than (d) on fields the customer cares about (see RESULTS.md, per-field table), the cheaper option is the wrong one. A typical outcome is that the fine-tuned model matches the large model on frequent, well-defined fields (enums, skills) and loses on rare or reasoning-heavy ones (implicit seniority, salary edge cases). A hybrid then works well: run the small model on everything and send low-confidence or schema-invalid outputs to the large model.
+
+**3. Latency.** Interactive use (a recruiter pastes a posting and waits) needs a low p95 at batch size 1. Back-filling a database needs throughput (batching, vLLM). CPU GGUF is fine for overnight batches of moderate size but usually too slow for interactive use.
+
+**4. Privacy and on-prem.**
+- *API:* posting texts leave your infrastructure and are processed under the provider's terms and data-processing agreement. Job postings are mostly public, but internal drafts or candidate-linked data may not be.
+- *Own GPU (cloud or on-prem):* data stays in your account or building. You need GPU operations skills (drivers, monitoring, model updates).
+- *CPU GGUF:* runs on ordinary servers or even laptops, fully offline. It suits strict on-prem or air-gapped customers with modest volumes.
+- *Licences:* the base model (Apache-2.0) and the adapter can be deployed on-prem without per-call fees.
+
+**5. Hidden costs.** Self-hosting adds engineering time, re-training when the schema changes, and monitoring for drift. The API adds dependency on a vendor's model versions (outputs can change when the model is updated) and price changes.
+
+| Monthly volume | Typical recommendation (to confirm against the measured table) |
+|---|---|
+| 10k | API (or CPU GGUF if data must stay on-prem). A GPU would mostly sit idle. |
+| 100k | Scheduled GPU batch jobs with the fine-tuned model if quality is close enough; otherwise API with batch pricing. |
+| 1M | Own GPU with batching (vLLM). The per-posting cost gap grows with volume; use the large model only as a fallback for hard cases. |
