@@ -1,0 +1,342 @@
+{
+  "$defs": {
+    "ContractType": {
+      "enum": [
+        "permanent",
+        "fixed_term",
+        "freelance",
+        "internship",
+        "working_student",
+        "unknown"
+      ],
+      "title": "ContractType",
+      "type": "string"
+    },
+    "LanguageLevel": {
+      "enum": [
+        "basic",
+        "good",
+        "fluent",
+        "native",
+        "unspecified"
+      ],
+      "title": "LanguageLevel",
+      "type": "string"
+    },
+    "LanguageRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "description": "Language name in lowercase English: 'german', 'english', 'french'. 'Deutschkenntnisse' -> 'german'.",
+          "title": "Language",
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/$defs/LanguageLevel",
+          "description": "basic = 'Grundkenntnisse', A1-A2, 'basic'; good = 'gute Kenntnisse', B1-B2, 'good'; fluent = 'fließend', 'verhandlungssicher', 'sehr gut', C1-C2, 'fluent', 'business fluent'; native = 'Muttersprache', 'native'; unspecified = the language is required but no level is stated."
+        }
+      },
+      "required": [
+        "language",
+        "level"
+      ],
+      "title": "LanguageRequirement",
+      "type": "object"
+    },
+    "Location": {
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "City as written in the posting, without postcode or district ('Nürnberg, Mittelfranken' -> 'Nürnberg'). null if only a country/region is given.",
+          "title": "City"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "ISO 3166-1 alpha-2 code, e.g. 'DE', 'AT', 'CH'. Use 'DE' for German cities. null if unknown.",
+          "title": "Country"
+        }
+      },
+      "required": [
+        "city",
+        "country"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "Mention": {
+      "enum": [
+        "yes",
+        "no",
+        "not_mentioned"
+      ],
+      "title": "Mention",
+      "type": "string"
+    },
+    "PostingLanguage": {
+      "enum": [
+        "en",
+        "de"
+      ],
+      "title": "PostingLanguage",
+      "type": "string"
+    },
+    "RemotePolicy": {
+      "enum": [
+        "onsite",
+        "hybrid",
+        "remote",
+        "unknown"
+      ],
+      "title": "RemotePolicy",
+      "type": "string"
+    },
+    "Salary": {
+      "additionalProperties": false,
+      "properties": {
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Lower bound as a plain number in the stated currency and period. '65.000 €' -> 65000; '4.500,50 €' -> 4500.5. For a single figure set min = max.",
+          "title": "Min"
+        },
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Upper bound; same rules as min.",
+          "title": "Max"
+        },
+        "currency": {
+          "description": "ISO 4217 code: '€'/'EUR'/'Euro' -> 'EUR', 'CHF', 'GBP', 'USD'.",
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/SalaryPeriod",
+          "description": "year ('p.a.', 'jährlich', 'brutto/Jahr'), month ('monatlich', 'pro Monat'), hour ('Stundenlohn', '€/h', 'pro Stunde')."
+        }
+      },
+      "required": [
+        "min",
+        "max",
+        "currency",
+        "period"
+      ],
+      "title": "Salary",
+      "type": "object"
+    },
+    "SalaryPeriod": {
+      "enum": [
+        "year",
+        "month",
+        "hour"
+      ],
+      "title": "SalaryPeriod",
+      "type": "string"
+    },
+    "Seniority": {
+      "enum": [
+        "intern",
+        "junior",
+        "mid",
+        "senior",
+        "staff_plus",
+        "unknown"
+      ],
+      "title": "Seniority",
+      "type": "string"
+    },
+    "YesNoUnclear": {
+      "enum": [
+        "yes",
+        "no",
+        "unclear"
+      ],
+      "title": "YesNoUnclear",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Structured fields extracted from one job posting.",
+  "properties": {
+    "title": {
+      "description": "Job title as written, without gender suffixes like '(m/w/d)' or '(f/m/x)'.",
+      "title": "Title",
+      "type": "string"
+    },
+    "company": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Hiring company as written. For staffing agencies use the agency name unless the client is named. null if absent.",
+      "title": "Company"
+    },
+    "locations": {
+      "description": "All work locations mentioned. Empty list if none is given.",
+      "items": {
+        "$ref": "#/$defs/Location"
+      },
+      "title": "Locations",
+      "type": "array"
+    },
+    "remote_policy": {
+      "$ref": "#/$defs/RemotePolicy",
+      "description": "remote = fully remote ('100% remote', 'Remote in Deutschland'); hybrid = some days at home ('2 Tage Homeoffice', 'mobiles Arbeiten möglich', 'hybrid'); onsite = explicitly on site or field/shift work that cannot be remote ('vor Ort'); unknown = not stated."
+    },
+    "seniority": {
+      "$ref": "#/$defs/Seniority",
+      "description": "From the title or explicit wording. intern = Praktikum/internship/Werkstudent; junior = 'Junior', 'Berufseinsteiger', 'Absolvent', 0-2 years; mid = 2-5 years or 'Professional' without senior wording; senior = 'Senior', 'Lead' (individual), 5+ years; staff_plus = 'Staff', 'Principal', 'Head of', 'Director', 'Bereichsleiter'; unknown = no signal. Do not infer seniority from salary alone."
+    },
+    "min_years_experience": {
+      "anyOf": [
+        {
+          "maximum": 40,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Minimum years of experience stated as a number: '3+ Jahre' -> 3, 'mindestens 5 Jahre' -> 5, '2-4 years' -> 2. Vague wording like 'mehrjährige Erfahrung' or 'several years' -> null (not a number).",
+      "title": "Min Years Experience"
+    },
+    "required_skills": {
+      "description": "Hard skills, tools, certificates and licences that are required ('Voraussetzung', 'must have', 'Ihr Profil'). Lowercase; synonyms normalised ('k8s' -> 'kubernetes'). No soft skills ('teamfähig'), no languages (those go to languages_required).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Skills",
+      "type": "array"
+    },
+    "nice_to_have_skills": {
+      "description": "Skills marked optional: 'wünschenswert', 'von Vorteil', 'idealerweise', 'nice to have', 'a plus', 'bonus'. Same normalisation as required_skills.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Nice To Have Skills",
+      "type": "array"
+    },
+    "languages_required": {
+      "description": "Spoken/written languages that are required. Optional languages ('Englisch von Vorteil') are not listed.",
+      "items": {
+        "$ref": "#/$defs/LanguageRequirement"
+      },
+      "title": "Languages Required",
+      "type": "array"
+    },
+    "english_sufficient": {
+      "$ref": "#/$defs/YesNoUnclear",
+      "description": "Can someone with English only do this job? Derived: 'no' if German at level good or above is required (enforced by the validator). 'yes' if the posting says English is enough or the working language is English and German is optional. Otherwise 'unclear'."
+    },
+    "contract_type": {
+      "$ref": "#/$defs/ContractType",
+      "description": "permanent = 'unbefristet', 'Festanstellung', 'permanent'; fixed_term = 'befristet', 'fixed-term', 'Elternzeitvertretung'; freelance = 'freiberuflich', 'Freelancer', 'contractor'; internship = 'Praktikum', 'Pflichtpraktikum'; working_student = 'Werkstudent', 'working student'; unknown = not stated."
+    },
+    "contract_duration_months": {
+      "anyOf": [
+        {
+          "maximum": 120,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Duration in months for fixed-term, internship or working-student contracts: 'befristet auf 2 Jahre' -> 24, '6-monatiges Praktikum' -> 6. null otherwise.",
+      "title": "Contract Duration Months"
+    },
+    "salary": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Salary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Only explicit figures. null if no number is given ('attraktive Vergütung', 'nach Tarif' without a figure)."
+    },
+    "visa_sponsorship": {
+      "$ref": "#/$defs/Mention",
+      "description": "yes = 'Visa sponsorship available', 'Unterstützung beim Visum'; no = 'no visa sponsorship', 'EU work permit required'; not_mentioned otherwise."
+    },
+    "relocation_support": {
+      "$ref": "#/$defs/Mention",
+      "description": "yes = 'relocation package', 'Umzugshilfe', 'Umzugskostenpauschale'; no = explicitly excluded; not_mentioned otherwise."
+    },
+    "application_deadline": {
+      "anyOf": [
+        {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "ISO date YYYY-MM-DD of an explicit deadline ('Bewerbungsfrist: 15.12.2026' -> '2026-12-15'). null if none.",
+      "title": "Application Deadline"
+    },
+    "posting_language": {
+      "$ref": "#/$defs/PostingLanguage",
+      "description": "Main language of the posting text: 'en' or 'de'."
+    }
+  },
+  "required": [
+    "title",
+    "company",
+    "locations",
+    "remote_policy",
+    "seniority",
+    "min_years_experience",
+    "required_skills",
+    "nice_to_have_skills",
+    "languages_required",
+    "english_sufficient",
+    "contract_type",
+    "contract_duration_months",
+    "salary",
+    "visa_sponsorship",
+    "relocation_support",
+    "application_deadline",
+    "posting_language"
+  ],
+  "title": "JobPosting",
+  "type": "object",
+  "$id": "https://joblens.local/schema/job_posting/1.0.0",
+  "x-schema-version": "1.0.0"
+}
