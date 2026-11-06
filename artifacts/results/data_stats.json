@@ -1,0 +1,65 @@
+{
+  "clean": {
+    "input": 6600,
+    "output": 6598,
+    "empty_dropped": 2,
+    "boilerplate_lines_removed": 1799,
+    "by_source_language": {
+      "arbeitnow|de": 1503,
+      "arbeitnow|en": 2496,
+      "bundesagentur|de": 2505,
+      "bundesagentur|en": 94
+    }
+  },
+  "dedup": {
+    "input": 6598,
+    "exact_removed": 151,
+    "near_removed": 545,
+    "output": 5902,
+    "by_source_language": {
+      "arbeitnow|de": 1310,
+      "arbeitnow|en": 2199,
+      "bundesagentur|de": 2300,
+      "bundesagentur|en": 93
+    }
+  },
+  "tokens": {
+    "tokenizer": "mistralai/Mistral-7B-Instruct-v0.3",
+    "overall": {
+      "n": 5902,
+      "mean": 1283.2055235513385,
+      "p50": 1116.0,
+      "p90": 1996.0,
+      "p95": 2428.699999999999,
+      "p99": 4110.449999999988,
+      "max": 20538.0
+    },
+    "by_language": {
+      "en": {
+        "n": 2292,
+        "mean": 1564.9851657940662,
+        "p50": 1290.0,
+        "p90": 2458.7000000000003,
+        "p95": 3085.2999999999975,
+        "p99": 6754.410000000167,
+        "max": 20538.0
+      },
+      "de": {
+        "n": 3610,
+        "mean": 1104.3027700831026,
+        "p50": 1026.5,
+        "p90": 1692.2999999999997,
+        "p95": 1961.5499999999997,
+        "p99": 2618.5599999999977,
+        "max": 5841.0
+      }
+    },
+    "max_input_tokens": 2048,
+    "share_truncated": 0.09064723822433074
+  },
+  "split": {
+    "train": 2700,
+    "val": 300,
+    "test": 200
+  }
+}

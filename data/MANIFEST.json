@@ -1,0 +1,54 @@
+{
+  "created_at": "2026-11-06T17:56:18+00:00",
+  "schema_version": "1.0.0",
+  "prompt_version": "p1.0",
+  "collection_dates": {
+    "min_fetched_at": "2026-11-06T16:56:34+00:00",
+    "max_fetched_at": "2026-11-06T17:44:24+00:00"
+  },
+  "unused_after_split": 2543,
+  "capped_by_max_per_company": 159,
+  "splits": {
+    "train": {
+      "n": 2700,
+      "by_source_language": {
+        "arbeitnow|de": 488,
+        "arbeitnow|en": 1294,
+        "bundesagentur|de": 862,
+        "bundesagentur|en": 56
+      },
+      "companies": 1283,
+      "ids_sha256": "28b788ee54a54dd141716e016e09c65577eb9a1e508582b6acee4a42b4dd3796",
+      "texts_sha256": "a57408f7ffd2240402a214942ffac24cc2d6141a81df805a9b4ca4178ad26c0a"
+    },
+    "val": {
+      "n": 300,
+      "by_source_language": {
+        "arbeitnow|de": 54,
+        "arbeitnow|en": 144,
+        "bundesagentur|de": 96,
+        "bundesagentur|en": 6
+      },
+      "companies": 83,
+      "ids_sha256": "45186a0c84a729b24bb42ef30d1d0e1588dec6a426af26ef80484f7e22a5a525",
+      "texts_sha256": "9d5c563f2683f10e629928f25a3dc0daf52345505044edc63337d89d661f1e09"
+    },
+    "test": {
+      "n": 200,
+      "by_source_language": {
+        "arbeitnow|de": 36,
+        "arbeitnow|en": 96,
+        "bundesagentur|de": 64,
+        "bundesagentur|en": 4
+      },
+      "companies": 137,
+      "ids_sha256": "0fc1356e59b16c17c084a05253427321389f634f5c8fa9622830dda20b3e7624",
+      "texts_sha256": "04bd6f9348c64cf58cfc967b73dd7fb0e8912816cd40f4f803a7dda99b903419"
+    }
+  },
+  "company_overlap": {
+    "train_test": 0,
+    "val_test": 0,
+    "train_val": 0
+  }
+}
