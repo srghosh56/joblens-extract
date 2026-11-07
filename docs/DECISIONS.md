@@ -52,6 +52,8 @@ Each entry: context, options, choice, consequence.
 - At most 25 postings per company (caps staffing agencies), and at most 3 per company in test, so the hand-checked set covers many employers.
 - Leftover postings are unused (counted in MANIFEST).
 
+- Arbeitnow also carries French, Dutch and other European postings, and `detect_language` can only answer "en" or "de". `split.replace_other_languages` swaps those postings for unused ones of the same source and language, from companies not used in any split (counted in MANIFEST as `other_language_replaced`). Every other assignment stays, which also kept the labels already paid for in GPU time.
+
 ## D-010 Schema details (SCHEMA_VERSION 1.0.0)
 - Every key is required (nullable where needed) and `extra="forbid"`, so a complete, closed object is what JSON-schema-constrained decoding produces and what Pydantic checks.
 - `application_deadline` is a string with an ISO-date regex plus a real-date validator, not Pydantic's `date` type. Reason: grammar-based decoders support `pattern` more reliably than `format: date`.

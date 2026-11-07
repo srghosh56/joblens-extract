@@ -67,9 +67,11 @@ tok = AutoTokenizer.from_pretrained(STUDENT_MODEL, revision=STUDENT_REVISION)
 items = [LabelItem.model_validate_json(x) for x in jsonl_lines(BUNDLE / "teacher_inputs.jsonl")]
 LIMIT = int(os.environ.get("JOBLENS_LIMIT", "0"))  # e.g. 220 for a smoke test
 if LIMIT:
+    # Longest postings first, so a smoke test also proves that the worst batches fit in memory.
+    longest = sorted(items, key=lambda it: len(it.text), reverse=True)
     items = [
-        *[it for it in items if it.split == "train"][:LIMIT],
-        *[it for it in items if it.split == "val"][:16],
+        *[it for it in longest if it.split == "train"][:LIMIT],
+        *[it for it in longest if it.split == "val"][:16],
     ]
     print("SMOKE TEST: do not use these outputs")
 labels = {}

@@ -14,7 +14,7 @@ from joblens.clean import CleanPosting, clean_postings
 from joblens.collect import read_raw
 from joblens.config import DATA, INTERIM, RAW, RESULTS, SPLITS
 from joblens.dedup import dedup
-from joblens.split import grouped_split, sha256_file, write_ids
+from joblens.split import grouped_split, replace_other_languages, sha256_file, write_ids
 
 
 def write_clean(path: Path, rows: Iterable[CleanPosting]) -> int:
@@ -102,7 +102,7 @@ def step_split(
     from joblens.schema import SCHEMA_VERSION
 
     rows = read_clean(interim / "dedup.jsonl")
-    res = grouped_split(rows)
+    res = replace_other_languages(grouped_split(rows), rows)
     manifest: dict[str, Any] = {
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "schema_version": SCHEMA_VERSION,
@@ -113,6 +113,7 @@ def step_split(
         },
         "unused_after_split": res.unused,
         "capped_by_max_per_company": res.capped,
+        "other_language_replaced": res.other_language_replaced,
         "splits": {},
     }
     for name in ("train", "val", "test"):

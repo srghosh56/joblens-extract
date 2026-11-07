@@ -1,13 +1,14 @@
 {
-  "created_at": "2026-11-06T17:56:18+00:00",
+  "created_at": "2026-11-07T05:27:31+00:00",
   "schema_version": "1.0.0",
   "prompt_version": "p1.0",
   "collection_dates": {
     "min_fetched_at": "2026-11-06T16:56:34+00:00",
     "max_fetched_at": "2026-11-06T17:44:24+00:00"
   },
-  "unused_after_split": 2543,
+  "unused_after_split": 2267,
   "capped_by_max_per_company": 159,
+  "other_language_replaced": 276,
   "splits": {
     "train": {
       "n": 2700,
@@ -17,9 +18,9 @@
         "bundesagentur|de": 862,
         "bundesagentur|en": 56
       },
-      "companies": 1283,
-      "ids_sha256": "28b788ee54a54dd141716e016e09c65577eb9a1e508582b6acee4a42b4dd3796",
-      "texts_sha256": "a57408f7ffd2240402a214942ffac24cc2d6141a81df805a9b4ca4178ad26c0a"
+      "companies": 1288,
+      "ids_sha256": "3867848616a627668723b293146f031e8689f8191d368b98045dd8572f2edf6e",
+      "texts_sha256": "cf4a756c2f2311cab668640065a70fdfad4deb6898f7c8dc2796e8c0b94c6d8b"
     },
     "val": {
       "n": 300,
@@ -29,9 +30,9 @@
         "bundesagentur|de": 96,
         "bundesagentur|en": 6
       },
-      "companies": 83,
-      "ids_sha256": "45186a0c84a729b24bb42ef30d1d0e1588dec6a426af26ef80484f7e22a5a525",
-      "texts_sha256": "9d5c563f2683f10e629928f25a3dc0daf52345505044edc63337d89d661f1e09"
+      "companies": 99,
+      "ids_sha256": "ab75a78929eccc356c4dcc1492dab6e1469bd3818b5ade93546728135d3a9322",
+      "texts_sha256": "89acca282afab57801cce0d4aec75e2087a737c06a14cf7ec51e7a5cdd717cac"
     },
     "test": {
       "n": 200,
@@ -41,9 +42,9 @@
         "bundesagentur|de": 64,
         "bundesagentur|en": 4
       },
-      "companies": 137,
-      "ids_sha256": "0fc1356e59b16c17c084a05253427321389f634f5c8fa9622830dda20b3e7624",
-      "texts_sha256": "04bd6f9348c64cf58cfc967b73dd7fb0e8912816cd40f4f803a7dda99b903419"
+      "companies": 139,
+      "ids_sha256": "f5b60220f7fe726d08e4333707b613184a6031a8c3219cd3231bd67a690ca02e",
+      "texts_sha256": "63cde0e96ee2651c26923f8f9d892995f38b95327524dd0da399d03e781999e5"
     }
   },
   "company_overlap": {

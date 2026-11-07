@@ -46,6 +46,7 @@ from joblens.kaggle.vllm_backend import VLLMBackend
 from joblens.teacher import (
     LabelCache,
     LabelItem,
+    cache_key,
     consistency_check,
     label_items,
     stats_dict,
@@ -86,6 +87,8 @@ if prev and not (OUT / "teacher_cache.jsonl").exists():
     shutil.copyfile(prev[0], OUT / "teacher_cache.jsonl")
     print("resuming from", prev[0])
 cache = LabelCache(OUT / "teacher_cache.jsonl")
+todo = sum(cache.get(cache_key(it, cfg["teacher"]["model_id"])) is None for it in items)
+print("postings still to label:", todo, "of", len(items))
 labels, stats = label_items(
     items,
     backend,

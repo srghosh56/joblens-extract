@@ -179,6 +179,88 @@ def detect_language(text: str) -> str:
     return "de" if de > en else "en"
 
 
+_MARKERS = {
+    "en": frozenset(
+        ["the", "and", "with", "you", "our", "for", "are", "will", "this", "that", "have", "your"]
+    ),
+    "de": frozenset(
+        [
+            "und",
+            "der",
+            "die",
+            "das",
+            "mit",
+            "für",
+            "wir",
+            "sie",
+            "ist",
+            "von",
+            "auf",
+            "bei",
+            "eine",
+            "zu",
+        ]
+    ),
+    "fr": frozenset(
+        [
+            "vous",
+            "nous",
+            "votre",
+            "notre",
+            "pour",
+            "avec",
+            "dans",
+            "une",
+            "est",
+            "les",
+            "des",
+            "sur",
+            "nos",
+            "vos",
+            "aux",
+        ]
+    ),
+    "nl": frozenset(
+        [
+            "wij",
+            "jij",
+            "jouw",
+            "onze",
+            "het",
+            "een",
+            "voor",
+            "met",
+            "bij",
+            "naar",
+            "ons",
+            "zijn",
+            "je",
+            "werk",
+        ]
+    ),
+    "es": frozenset(
+        ["nuestro", "nuestra", "para", "con", "los", "las", "una", "somos", "del", "tu", "trabajo"]
+    ),
+    "it": frozenset(
+        ["siamo", "nostro", "nostra", "della", "delle", "per", "con", "gli", "una", "sono"]
+    ),
+}
+
+
+def is_other_language(text: str) -> bool:
+    """True when French, Dutch, Spanish or Italian clearly outweighs English and German.
+
+    `detect_language` must answer "en" or "de", so Arbeitnow's other European postings would
+    otherwise pass as one of the two.
+    """
+    words = re.findall(r"[a-zà-ÿß]+", text.lower())
+    if not words:
+        return False
+    hits = {k: sum(w in v for w in words) for k, v in _MARKERS.items()}
+    in_scope = max(hits["en"], hits["de"])
+    return max(hits["fr"], hits["nl"], hits["es"], hits["it"]) >= 1.5 * max(in_scope, 1)
+
+
 @dataclass
 class CleanStats:
     input: int = 0

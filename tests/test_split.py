@@ -1,8 +1,8 @@
 import csv
 import random
 
-from joblens.clean import CleanPosting
-from joblens.split import company_key, grouped_split, write_ids
+from joblens.clean import CleanPosting, is_other_language
+from joblens.split import company_key, grouped_split, replace_other_languages, write_ids
 
 
 def make_rows(n_companies=400, seed=0):
@@ -63,3 +63,36 @@ def test_write_ids_has_no_text(tmp_path):
     with (tmp_path / "ids.csv").open() as fh:
         header = next(csv.reader(fh))
     assert "text" not in header and len(sha) == 64
+
+
+FRENCH = "Vous rejoindrez notre équipe pour une mission avec nos clients dans les régions."
+ENGLISH = "You will join our team and work with the customers for this role."
+GERMAN = "Wir suchen eine Person für das Team und die Arbeit mit der Software von uns."
+
+
+def test_is_other_language():
+    assert is_other_language(FRENCH)
+    assert not is_other_language(ENGLISH)
+    assert not is_other_language(GERMAN)
+    assert not is_other_language("")
+
+
+def test_replace_other_languages_keeps_counts_and_company_rule():
+    rows = make_rows()
+    for r in rows:
+        r.text = ENGLISH if r.language == "en" else GERMAN
+    res = grouped_split(rows, test_size=40, train_total=100, val_size=20)
+    res.test[0].text = FRENCH
+    res.train[0].text = FRENCH
+    before = {n: len(getattr(res, n)) for n in ("train", "val", "test")}
+    strata = {n: sorted(r.language for r in getattr(res, n)) for n in ("train", "val", "test")}
+    unchanged = {r.source_id for r in res.val}
+    replace_other_languages(res, rows)
+    assert res.other_language_replaced == 2
+    assert {n: len(getattr(res, n)) for n in before} == before
+    assert {n: sorted(r.language for r in getattr(res, n)) for n in before} == strata
+    assert {r.source_id for r in res.val} == unchanged
+    assert not any(is_other_language(r.text) for n in before for r in getattr(res, n))
+    assert not (res.companies("train") & res.companies("test"))
+    assert not (res.companies("train") & res.companies("val"))
+    assert not (res.companies("val") & res.companies("test"))

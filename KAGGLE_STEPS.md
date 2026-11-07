@@ -42,7 +42,7 @@ Each notebook has a short mode, so a problem costs minutes rather than hours. Ad
 | Notebook | First cell | What it runs |
 |---|---|---|
 | 00 | `import os; os.environ["JOBLENS_LIMIT"] = "20"` | 20 postings per split |
-| 01 (needs the full labels from 00) | `import os; os.environ["JOBLENS_LIMIT"] = "220"` | 26 training steps per config |
+| 01 (needs the full labels from 00) | `import os; os.environ["JOBLENS_LIMIT"] = "220"` | 26 training steps per config on the longest postings |
 | 02 | `import os; os.environ["JOBLENS_LIMIT"] = "5"` | 5 test postings per system |
 
 ## 3. Notebook 00: teacher labels + system (d)
