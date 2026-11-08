@@ -53,7 +53,7 @@ Each entry: context, options, choice, consequence.
 - At most 25 postings per company (caps staffing agencies), and at most 3 per company in test, so the hand-checked set covers many employers.
 - Leftover postings are unused (counted in MANIFEST).
 
-- Arbeitnow also carries French, Dutch and other European postings, and `detect_language` can only answer "en" or "de". `split.replace_other_languages` swaps those postings for unused ones of the same source and language, from companies not used in any split (counted in MANIFEST as `other_language_replaced`). Every other assignment stays, which also kept the labels already paid for in GPU time.
+- After the grouped split, `split.repair_split` swaps out postings that do not belong and keeps every other assignment (so labels already paid for in GPU time stay valid). It removes postings in another language, and test or validation postings whose *employer family* also appears in an earlier split (branches such as "Ferchau Niederlassung München" and "Ferchau GB Aviation Hamburg" have different company keys but one employer). Replacements match source and language and come from unused employers. MANIFEST records both counts and an `employer_family_overlap` check.
 
 ## D-010 Schema details (SCHEMA_VERSION 1.0.0)
 - Every key is required (nullable where needed) and `extra="forbid"`, so a complete, closed object is what JSON-schema-constrained decoding produces and what Pydantic checks.
@@ -134,3 +134,15 @@ Each entry: context, options, choice, consequence.
 - **Context:** Some small employers on the boards are private individuals, and nothing reads the `company` column of `data/splits/ids_*.csv`.
 - **Choice:** The published ID files keep only source, source ID, URL and language. Company grouping happens on the private interim files.
 - **Consequence:** `data/MANIFEST.json` still proves that no company crosses splits, without publishing the names.
+
+## D-022 Data-quality log: what the first labelling runs exposed
+The first teacher run on real data surfaced four problems that the synthetic test fixtures could not. Each was fixed before training and is now guarded by a test in CI.
+
+| Problem | How I found it | Fix | Test |
+|---|---|---|---|
+| JSONL records split inside a posting: `str.splitlines()` also breaks on U+2028, which JSON leaves unescaped | Kaggle smoke test crashed on line 1 of `teacher_inputs.jsonl` | `jsonio.jsonl_lines` splits on `"\n"` only; every reader uses it | `test_jsonio.py` |
+| French and Dutch postings labelled as English or German: the language vote only knew two languages | A failed posting's ID looked French; a stop-word count found 276 of 3,200 | `clean.is_other_language` and `split.out_of_scope` (full text and the part the model sees); `repair_split` replaces them | `test_split.py::test_is_other_language`, `test_out_of_scope_checks_the_part_the_model_sees`, `test_repair_split_replaces_other_languages_and_keeps_counts` |
+| Escaped HTML (`&lt;div&gt;`) left as markup in 467 postings; over half of the English Arbeitnow ones were cut at the input limit | Reading real cleaned postings instead of only counting them | `clean.html_to_text` decodes escaped markup and leftover entities | `test_clean_dedup.py::test_escaped_html_is_converted_to_text`, `test_entities_in_plain_text_are_decoded` |
+| The same employer in train and test under different branch names | A pre-run audit comparing employer names and shared text between splits | `split.employer_family` and the leak rule in `repair_split` | `test_split.py::test_employer_family_groups_branches`, `test_repair_split_removes_employer_family_leaks` |
+
+Known and accepted, measured by the gold review: the teacher often leaves `company` empty when the name is only in the board's metadata, and about 0.6% of postings fail twice because the teacher repeats skills until the output limit. Changing the prompt now would invalidate every label.

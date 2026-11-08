@@ -2,7 +2,15 @@ import csv
 import random
 
 from joblens.clean import CleanPosting, is_other_language
-from joblens.split import company_key, grouped_split, replace_other_languages, write_ids
+from joblens.split import (
+    company_key,
+    employer_family,
+    family_overlap,
+    grouped_split,
+    out_of_scope,
+    repair_split,
+    write_ids,
+)
 
 
 def make_rows(n_companies=400, seed=0):
@@ -21,7 +29,7 @@ def make_rows(n_companies=400, seed=0):
                     url="",
                     fetched_at="t",
                     title="t",
-                    company=f"Firma {c} GmbH",
+                    company=f"Firma{c} GmbH",
                     text="x",
                     language=lang,
                 )
@@ -77,7 +85,7 @@ def test_is_other_language():
     assert not is_other_language("")
 
 
-def test_replace_other_languages_keeps_counts_and_company_rule():
+def test_repair_split_replaces_other_languages_and_keeps_counts():
     rows = make_rows()
     for r in rows:
         r.text = ENGLISH if r.language == "en" else GERMAN
@@ -87,7 +95,7 @@ def test_replace_other_languages_keeps_counts_and_company_rule():
     before = {n: len(getattr(res, n)) for n in ("train", "val", "test")}
     strata = {n: sorted(r.language for r in getattr(res, n)) for n in ("train", "val", "test")}
     unchanged = {r.source_id for r in res.val}
-    replace_other_languages(res, rows)
+    repair_split(res, rows)
     assert res.other_language_replaced == 2
     assert {n: len(getattr(res, n)) for n in before} == before
     assert {n: sorted(r.language for r in getattr(res, n)) for n in before} == strata
@@ -96,3 +104,39 @@ def test_replace_other_languages_keeps_counts_and_company_rule():
     assert not (res.companies("train") & res.companies("test"))
     assert not (res.companies("train") & res.companies("val"))
     assert not (res.companies("val") & res.companies("test"))
+
+
+def test_employer_family_groups_branches():
+    assert employer_family("FERCHAU GmbH Niederlassung München") == "ferchau"
+    assert employer_family("Ferchau GB Aviation Hamburg") == "ferchau"
+    assert employer_family("Die Deutsche Bahn AG") == "bahn"
+    assert employer_family("") is None
+
+
+def test_out_of_scope_checks_the_part_the_model_sees():
+    french_head = CleanPosting(
+        source="a",
+        source_id="1",
+        url="",
+        fetched_at="t",
+        title="t",
+        company="c",
+        text=FRENCH * 120 + ENGLISH * 400,
+        language="en",
+    )
+    assert not is_other_language(french_head.text)
+    assert out_of_scope(french_head)
+
+
+def test_repair_split_removes_employer_family_leaks():
+    rows = make_rows()
+    for r in rows:
+        r.text = ENGLISH if r.language == "en" else GERMAN
+    res = grouped_split(rows, test_size=40, train_total=100, val_size=20)
+    branch = res.train[0].company.replace("GmbH", "Niederlassung Berlin")
+    res.test[0].company = branch
+    before = {n: len(getattr(res, n)) for n in ("train", "val", "test")}
+    repair_split(res, rows)
+    assert res.employer_leak_replaced >= 1
+    assert {n: len(getattr(res, n)) for n in before} == before
+    assert family_overlap(res)["train_test"] == 0

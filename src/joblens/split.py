@@ -45,6 +45,7 @@ class SplitResult:
     unused: int = 0
     capped: int = 0
     other_language_replaced: int = 0
+    employer_leak_replaced: int = 0
 
     def companies(self, name: str) -> set[str]:
         rows: list[CleanPosting] = getattr(self, name)
@@ -127,41 +128,127 @@ def grouped_split(
     return res
 
 
-def replace_other_languages(
+# Words that say nothing about who the employer is, skipped when finding the employer family.
+_GENERIC = frozenset(
+    [
+        "die",
+        "der",
+        "das",
+        "the",
+        "und",
+        "and",
+        "for",
+        "für",
+        "vom",
+        "von",
+        "deutsche",
+        "institut",
+        "stadt",
+        "universität",
+        "university",
+        "klinikum",
+        "gruppe",
+        "group",
+        "international",
+        "global",
+        "digital",
+        "personal",
+        "service",
+        "services",
+        "consulting",
+        "technologies",
+        "solutions",
+        "systems",
+        "software",
+        "tech",
+        "job",
+        "jobs",
+        "unser",
+        "our",
+        "kunde",
+        "kunden",
+        "landkreis",
+        "kreis",
+        "gemeinde",
+        "evangelische",
+        "katholische",
+        "sankt",
+        "bundes",
+        "landes",
+        "niederlassung",
+        "standort",
+    ]
+)
+HEAD_CHARS = 7000  # roughly the part of a posting the models see (max_input_tokens = 2048)
+
+
+def employer_family(name: str) -> str | None:
+    """First distinctive word of the company name, so branches like "Ferchau Niederlassung
+    München" and "Ferchau GB Aviation Hamburg" count as one employer."""
+    key = company_key(name)
+    if key == "unknown":
+        return None
+    words = [w for w in key.split() if len(w) >= 3 and w not in _GENERIC]
+    return words[0] if words else key
+
+
+def out_of_scope(p: CleanPosting) -> bool:
+    """Another language in the full text, or in the part the models actually see."""
+    return is_other_language(p.title + "\n" + p.text) or is_other_language(
+        p.title + "\n" + p.text[:HEAD_CHARS]
+    )
+
+
+def repair_split(
     res: SplitResult,
     rows: Sequence[CleanPosting],
     seed: int = SPLIT_SEED,
     max_per_company: int = MAX_PER_COMPANY,
     test_max_company: int = 3,
 ) -> SplitResult:
-    """Swap postings in other languages for unused ones, keeping every other assignment.
+    """Swap out postings that do not belong, keeping every other assignment.
 
-    Replacements match the removed posting's source and language, and come only from companies
-    not used in any split, so the no-company-in-two-splits rule still holds.
+    Removed: postings in another language (any split); test postings whose employer family also
+    appears in train or val; val postings whose employer family appears in train. Replacements
+    match the removed posting's source and language and come from unused companies whose
+    employer family is in no split, so the company and family rules still hold.
     """
     rng = random.Random(seed)
+
+    def families(*names: str) -> set[str]:
+        out = {employer_family(p.company) for n in names for p in getattr(res, n)}
+        return {f for f in out if f}
+
+    taken_families = families("train", "val", "test")
     used = res.companies("train") | res.companies("val") | res.companies("test")
     groups: dict[str, list[CleanPosting]] = defaultdict(list)
     for p in sorted(rows, key=lambda r: (r.source, r.source_id)):
         key = company_key(p.company)
-        if key not in used and not is_other_language(p.title + "\n" + p.text):
-            groups[key].append(p)
+        if key in used or out_of_scope(p) or employer_family(p.company) in taken_families:
+            continue
+        groups[key].append(p)
     keys = sorted(groups)
     rng.shuffle(keys)
-    for name, limit in (
-        ("test", test_max_company),
-        ("val", max_per_company),
-        ("train", max_per_company),
-    ):
+    plan: tuple[tuple[str, int, set[str]], ...] = (
+        ("test", test_max_company, families("train", "val")),
+        ("val", max_per_company, families("train")),
+        ("train", max_per_company, set()),
+    )
+    for name, limit, leak_families in plan:
         part: list[CleanPosting] = getattr(res, name)
-        keep = [p for p in part if not is_other_language(p.title + "\n" + p.text)]
+        keep = []
+        for p in part:
+            if out_of_scope(p):
+                res.other_language_replaced += 1
+            elif employer_family(p.company) in leak_families:
+                res.employer_leak_replaced += 1
+            else:
+                keep.append(p)
         need = Counter(stratum(p) for p in part) - Counter(stratum(p) for p in keep)
-        res.other_language_replaced += len(part) - len(keep)
         for key in list(keys):
             if not need:
                 break
             taken = [p for p in groups[key] if need[stratum(p)] > 0][:limit]
-            taken = [p for p in taken if need[stratum(p)] > 0]
             if taken:
                 keys.remove(key)
                 for p in taken:
@@ -172,8 +259,20 @@ def replace_other_languages(
         if need:
             raise ValueError(f"{name}: not enough unused postings to replace {dict(need)}")
         setattr(res, name, keep)
-    res.unused -= res.other_language_replaced
+    res.unused -= res.other_language_replaced + res.employer_leak_replaced
     return res
+
+
+def family_overlap(res: SplitResult) -> dict[str, int]:
+    fam = {
+        n: {f for p in getattr(res, n) if (f := employer_family(p.company))}
+        for n in ("train", "val", "test")
+    }
+    return {
+        "train_test": len(fam["train"] & fam["test"]),
+        "val_test": len(fam["val"] & fam["test"]),
+        "train_val": len(fam["train"] & fam["val"]),
+    }
 
 
 ID_FIELDS = ["source", "source_id", "url", "language"]

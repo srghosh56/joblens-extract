@@ -1,14 +1,15 @@
 {
-  "created_at": "2026-11-08T06:29:53+00:00",
+  "created_at": "2026-11-08T07:05:00+00:00",
   "schema_version": "1.0.0",
   "prompt_version": "p1.0",
   "collection_dates": {
     "min_fetched_at": "2026-11-06T16:56:34+00:00",
     "max_fetched_at": "2026-11-06T17:44:24+00:00"
   },
-  "unused_after_split": 2199,
+  "unused_after_split": 2148,
   "capped_by_max_per_company": 159,
   "other_language_replaced": 310,
+  "employer_leak_replaced": 51,
   "splits": {
     "train": {
       "n": 2700,
@@ -18,9 +19,9 @@
         "bundesagentur|de": 860,
         "bundesagentur|en": 57
       },
-      "companies": 1285,
-      "ids_sha256": "3c21541e482b8d722d0dd1aacc130f50cdea0fce562045d6b45747d63d6838a1",
-      "texts_sha256": "3cef2f0006f61e7762ec9babfd9cc8ea18a6c0761d6efaf5aa57ebd57b4df8c3"
+      "companies": 1310,
+      "ids_sha256": "e41c4073c024c1441c2574b677e24f9f3b4064f7206d00f0167a7a346ef575cc",
+      "texts_sha256": "0054224b22dc533930d13864eda3df942dcd22009c412c49af9a1dc40432217a"
     },
     "val": {
       "n": 300,
@@ -30,9 +31,9 @@
         "bundesagentur|de": 96,
         "bundesagentur|en": 6
       },
-      "companies": 114,
-      "ids_sha256": "dea32a005a456cbba152468ab44b86e11efff7a7b80f0a9fd51cbbcffedbc520",
-      "texts_sha256": "a30dcb31cebb8368542c4c62991a130df0d9302e95053acaf2f38aa96e5bbe35"
+      "companies": 146,
+      "ids_sha256": "097bb39aa1b19549f969e7d7827a809b7678f8e3b0c3f42a796edcad41870b31",
+      "texts_sha256": "b1345bd88ab05a559c5760136abd81703c5d73185a1852d8db6f0ac58a2d4794"
     },
     "test": {
       "n": 200,
@@ -42,12 +43,17 @@
         "bundesagentur|de": 64,
         "bundesagentur|en": 4
       },
-      "companies": 151,
-      "ids_sha256": "5010fb6cec214bb9cd84e80c1d7b6900a870af5ee0689d2e0c0c70d05a974137",
-      "texts_sha256": "c1d8bac673de99e28eb7dec5d0e6698afd8bc000f097eb073d47af3a8c666408"
+      "companies": 147,
+      "ids_sha256": "cbc682bfeb131d2d8b71d886b8b65bb46c640d73d2895dbd6f07ade17a6c6560",
+      "texts_sha256": "a6268999b9282baaf88cfa25d638e712673c3cb55d33ba2c73e547579ca0d64f"
     }
   },
   "company_overlap": {
+    "train_test": 0,
+    "val_test": 0,
+    "train_val": 0
+  },
+  "employer_family_overlap": {
     "train_test": 0,
     "val_test": 0,
     "train_val": 0

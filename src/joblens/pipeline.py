@@ -14,7 +14,7 @@ from joblens.clean import CleanPosting, clean_postings
 from joblens.collect import read_raw
 from joblens.config import DATA, INTERIM, RAW, RESULTS, SPLITS
 from joblens.dedup import dedup
-from joblens.split import grouped_split, replace_other_languages, sha256_file, write_ids
+from joblens.split import family_overlap, grouped_split, repair_split, sha256_file, write_ids
 
 
 def write_clean(path: Path, rows: Iterable[CleanPosting]) -> int:
@@ -102,7 +102,7 @@ def step_split(
     from joblens.schema import SCHEMA_VERSION
 
     rows = read_clean(interim / "dedup.jsonl")
-    res = replace_other_languages(grouped_split(rows), rows)
+    res = repair_split(grouped_split(rows), rows)
     manifest: dict[str, Any] = {
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "schema_version": SCHEMA_VERSION,
@@ -114,6 +114,7 @@ def step_split(
         "unused_after_split": res.unused,
         "capped_by_max_per_company": res.capped,
         "other_language_replaced": res.other_language_replaced,
+        "employer_leak_replaced": res.employer_leak_replaced,
         "splits": {},
     }
     for name in ("train", "val", "test"):
@@ -134,6 +135,7 @@ def step_split(
         "train_val": len(res.companies("train") & res.companies("val")),
     }
     manifest["company_overlap"] = overlap
+    manifest["employer_family_overlap"] = family_overlap(res)
     (data / "MANIFEST.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
     _update_stats(results, "split", {k: v["n"] for k, v in manifest["splits"].items()})
     return manifest
