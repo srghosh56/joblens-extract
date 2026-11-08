@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import re
 import unicodedata
 from collections import Counter
@@ -118,10 +119,15 @@ class CleanPosting(BaseModel):
     location: str = ""
 
 
+_ENTITY = re.compile(r"&(?:amp|lt|gt|nbsp|quot|apos|#\d+|#x[0-9a-fA-F]+);")
+
+
 def html_to_text(raw: str) -> str:
     """Convert HTML to plain text, keeping paragraph breaks and list bullets."""
+    if "&lt;" in raw:  # some postings arrive with their HTML escaped as text
+        raw = html.unescape(raw)
     if "<" not in raw:
-        return raw
+        return html.unescape(raw) if _ENTITY.search(raw) else raw
     tree = LexborHTMLParser(raw)
     for node in tree.css("script,style,noscript,iframe"):
         node.decompose()
@@ -132,7 +138,9 @@ def html_to_text(raw: str) -> str:
     for node in tree.css(BLOCK_TAGS):
         node.insert_after("\n")
     root = tree.body if tree.body is not None else tree.root
-    return root.text(separator="", strip=False) if root is not None else ""
+    text = root.text(separator="", strip=False) if root is not None else ""
+    # Double-escaped sources leave entities such as "&amp;" behind after parsing.
+    return html.unescape(text) if _ENTITY.search(text) else text
 
 
 def normalize_whitespace(text: str) -> str:

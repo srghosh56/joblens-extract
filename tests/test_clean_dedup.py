@@ -106,3 +106,18 @@ def test_minhash_estimates_jaccard():
     assert exact_hash("A  b") == exact_hash("a b")
     assert shingles("a b", k=5) == {"a b"} and shingles("", k=5) == set()
     assert true_jaccard("", "") == 1.0
+
+
+def test_escaped_html_is_converted_to_text():
+    from joblens.clean import html_to_text
+
+    raw = "&lt;div class=&quot;intro&quot;&gt;&lt;p&gt;We build tools &amp;amp; more.&lt;/p&gt;&lt;/div&gt;"
+    out = html_to_text(raw)
+    assert "<" not in out and "&lt;" not in out
+    assert "We build tools & more." in out
+
+
+def test_entities_in_plain_text_are_decoded():
+    from joblens.clean import html_to_text
+
+    assert html_to_text("Sales &amp; Marketing&nbsp;Team") == "Sales & Marketing\xa0Team"

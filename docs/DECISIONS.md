@@ -35,6 +35,7 @@ Each entry: context, options, choice, consequence.
 - Boilerplate: (1) an explicit list of info-free line patterns (application calls to action, equal-opportunity and cookie lines); (2) lines that appear in ≥ 2% (and ≥ 20) of postings *and* contain no extractable hint (digits, €, remote, Deutsch, Jahre, ...). Rejected: per-company boilerplate removal, which would delete salary/benefit lines a company repeats.
 - Near-duplicates: MinHash with 128 permutations on word 5-gram shingles, LSH threshold 0.85, keeping the first occurrence. Reasoning: reposted jobs differ by a date or a city line (Jaccard > 0.9), whereas genuinely different jobs from one employer share template sections but usually stay below 0.8. Exact duplicates are found first via SHA-256 of the lowercased, whitespace-collapsed text.
 - Postings shorter than 200 characters after cleaning are dropped (nothing to extract).
+- Some Arbeitnow postings arrive with their HTML escaped as text (`&lt;div&gt;`). The cleaner decodes those first, and decodes leftover entities such as `&amp;`. Before this fix, 467 of the 3,200 selected postings still contained markup, and over half of the English Arbeitnow ones among them were cut at the input limit. After it, 5% of all postings exceed the limit instead of 9%.
 
 ## D-007 No system role in prompts
 - **Context:** The Mistral-7B-Instruct-v0.3 chat template (transformers 5.22.1) attaches the system message only to the *last* user turn. For a (user, assistant) training example, the system text was dropped entirely (verified: output `<s>[INST] U[/INST] A</s>`).

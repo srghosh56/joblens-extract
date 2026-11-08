@@ -3,59 +3,59 @@
     "input": 6600,
     "output": 6598,
     "empty_dropped": 2,
-    "boilerplate_lines_removed": 1799,
+    "boilerplate_lines_removed": 2420,
     "by_source_language": {
-      "arbeitnow|de": 1503,
-      "arbeitnow|en": 2496,
+      "arbeitnow|de": 1506,
+      "arbeitnow|en": 2493,
       "bundesagentur|de": 2505,
       "bundesagentur|en": 94
     }
   },
   "dedup": {
     "input": 6598,
-    "exact_removed": 151,
-    "near_removed": 545,
-    "output": 5902,
+    "exact_removed": 153,
+    "near_removed": 577,
+    "output": 5868,
     "by_source_language": {
-      "arbeitnow|de": 1310,
-      "arbeitnow|en": 2199,
-      "bundesagentur|de": 2300,
+      "arbeitnow|de": 1314,
+      "arbeitnow|en": 2163,
+      "bundesagentur|de": 2298,
       "bundesagentur|en": 93
     }
   },
   "tokens": {
     "tokenizer": "mistralai/Mistral-7B-Instruct-v0.3",
     "overall": {
-      "n": 5902,
-      "mean": 1283.2055235513385,
-      "p50": 1116.0,
-      "p90": 1996.0,
-      "p95": 2428.699999999999,
-      "p99": 4110.449999999988,
-      "max": 20538.0
+      "n": 5868,
+      "mean": 1156.3185071574642,
+      "p50": 1087.0,
+      "p90": 1791.0,
+      "p95": 2042.949999999999,
+      "p99": 2634.33,
+      "max": 4473.0
     },
     "by_language": {
       "en": {
-        "n": 2292,
-        "mean": 1564.9851657940662,
-        "p50": 1290.0,
-        "p90": 2458.7000000000003,
-        "p95": 3085.2999999999975,
-        "p99": 6754.410000000167,
-        "max": 20538.0
+        "n": 2256,
+        "mean": 1252.0562943262412,
+        "p50": 1182.0,
+        "p90": 1931.0,
+        "p95": 2172.5,
+        "p99": 2819.849999999994,
+        "max": 4473.0
       },
       "de": {
-        "n": 3610,
-        "mean": 1104.3027700831026,
-        "p50": 1026.5,
-        "p90": 1692.2999999999997,
-        "p95": 1961.5499999999997,
-        "p99": 2618.5599999999977,
-        "max": 5841.0
+        "n": 3612,
+        "mean": 1096.5221483942414,
+        "p50": 1025.0,
+        "p90": 1675.9,
+        "p95": 1928.249999999999,
+        "p99": 2524.0,
+        "max": 3961.0
       }
     },
     "max_input_tokens": 2048,
-    "share_truncated": 0.09064723822433074
+    "share_truncated": 0.04942058623040218
   },
   "split": {
     "train": 2700,
