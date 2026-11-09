@@ -26,6 +26,24 @@ def test_form_roundtrip():
     assert form_to_label(label_to_form(e)) == e
 
 
+def test_form_roundtrip_keeps_a_country_without_a_city():
+    # Found while reviewing: {"city": null, "country": "DE"} was shown as "DE" and
+    # saved back as {"city": "DE", "country": null}.
+    label = empty_label()
+    label["locations"] = [
+        {"city": None, "country": "DE"},
+        {"city": "Berlin", "country": None},
+        {"city": "Wien", "country": "AT"},
+    ]
+    assert form_to_label(label_to_form(label)) == label
+
+
+def test_form_drops_empty_locations():
+    label = empty_label()
+    label["locations"] = [{"city": None, "country": None}]
+    assert form_to_label(label_to_form(label))["locations"] == []
+
+
 def test_form_parsing_edge_cases():
     f = label_to_form(empty_label())
     f.update(

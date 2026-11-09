@@ -154,6 +154,12 @@ def empty_label(title: str = "", language: str = "en") -> dict[str, Any]:
     }
 
 
+def _location_line(loc: dict[str, Any]) -> str:
+    """'Berlin, DE', 'Berlin' or ', DE'. The leading comma keeps a lone country a country."""
+    city, country = loc.get("city") or "", loc.get("country") or ""
+    return f"{city}, {country}" if country else city
+
+
 def label_to_form(label: dict[str, Any]) -> dict[str, Any]:
     """Flatten a label into simple widget values (strings, numbers, enums)."""
     sal = label.get("salary") or {}
@@ -161,8 +167,9 @@ def label_to_form(label: dict[str, Any]) -> dict[str, Any]:
         **{k: label[k] for k in label if k not in ("locations", "languages_required", "salary")},
         "company": label.get("company") or "",
         "locations": "\n".join(
-            f"{loc.get('city') or ''}, {loc.get('country') or ''}".strip(", ")
+            _location_line(loc)
             for loc in label.get("locations", [])
+            if loc.get("city") or loc.get("country")
         ),
         "required_skills": ", ".join(label.get("required_skills", [])),
         "nice_to_have_skills": ", ".join(label.get("nice_to_have_skills", [])),

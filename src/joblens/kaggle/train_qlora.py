@@ -20,6 +20,11 @@ from typing import Any
 from joblens.jsonio import jsonl_lines
 
 
+def over_budget(elapsed_s: float, budget_hours: float) -> bool:
+    """True once training has used its time budget (0 or less means no budget)."""
+    return budget_hours > 0 and elapsed_s >= budget_hours * 3600
+
+
 def load_examples(data_dir: Path, split: str) -> list[dict[str, Any]]:
     return [json.loads(x) for x in jsonl_lines(data_dir / f"sft_{split}.jsonl")]
 
@@ -31,6 +36,12 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--max-seq-length", type=int, required=True)
     ap.add_argument("--max-steps", type=int, default=-1, help="cap steps for a smoke test")
+    ap.add_argument(
+        "--time-budget-hours",
+        type=float,
+        default=10.5,
+        help="stop cleanly (evaluate, save, keep the best checkpoint) before Kaggle's 12 h limit",
+    )
     args = ap.parse_args()
 
     import unsloth  # noqa: F401  (must be imported before transformers/trl/peft)
@@ -39,7 +50,7 @@ def main() -> None:
     import mlflow
     import torch
     from datasets import Dataset
-    from transformers import EarlyStoppingCallback
+    from transformers import EarlyStoppingCallback, TrainerCallback
     from trl import SFTConfig, SFTTrainer
     from unsloth import FastLanguageModel
 
@@ -106,13 +117,30 @@ def main() -> None:
         seed=cfg.seed,
         report_to="none",
     )
+
+    budget_hours = args.time_budget_hours
+
+    class TimeBudget(TrainerCallback):
+        stopped = False
+
+        def on_step_end(self, args: Any, state: Any, control: Any, **kwargs: Any) -> Any:
+            if over_budget(time.perf_counter() - t0, budget_hours):
+                TimeBudget.stopped = True
+                control.should_evaluate = True
+                control.should_save = True
+                control.should_training_stop = True
+            return control
+
     trainer = SFTTrainer(
         model=model,
         args=sft_args,
         train_dataset=train_ds,
         eval_dataset=val_ds,
         processing_class=tok,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=cfg.early_stopping_patience)],
+        callbacks=[
+            EarlyStoppingCallback(early_stopping_patience=cfg.early_stopping_patience),
+            TimeBudget(),
+        ],
     )
     result = trainer.train()
     wall = time.perf_counter() - t0
@@ -132,6 +160,7 @@ def main() -> None:
         "best_checkpoint": trainer.state.best_model_checkpoint,
         "best_eval_loss": trainer.state.best_metric,
         "global_steps": trainer.state.global_step,
+        "stopped_by_time_budget": TimeBudget.stopped,
         "train_runtime_s": result.metrics.get("train_runtime"),
         "wall_time_s": wall,
         "peak_gpu_mem_gb": torch.cuda.max_memory_allocated() / 1024**3,

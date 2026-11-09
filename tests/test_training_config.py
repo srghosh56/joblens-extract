@@ -27,3 +27,12 @@ def test_configs():
     assert effective_batch(CONFIGS["r16"]) == 16
     assert total_steps(CONFIGS["r16"], 2700) == 169 * 2
     assert CONFIGS["r16"].as_dict()["optim"] == "paged_adamw_8bit"
+
+
+def test_time_budget_stops_training_before_the_kaggle_limit():
+    # Full training is estimated at 9-10 h and Kaggle kills a run at 12 h, losing all output.
+    from joblens.kaggle.train_qlora import over_budget
+
+    assert not over_budget(10 * 3600, 10.5)
+    assert over_budget(10.5 * 3600, 10.5)
+    assert not over_budget(20 * 3600, 0)  # 0 disables the budget
