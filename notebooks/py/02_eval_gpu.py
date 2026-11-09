@@ -36,11 +36,13 @@ SRC = BUNDLE / "joblens_src"
 OUT = Path("/kaggle/working/out02")
 OUT.mkdir(parents=True, exist_ok=True)
 cfg = json.loads((BUNDLE / "bundle_config.json").read_text())
+# .../runs/<config>/adapter/adapter_config.json -> key "<config>" (r16, r32)
 adapters = {
-    Path(p).parent.name: Path(p).parent
+    Path(p).parent.parent.name: Path(p).parent
     for p in glob.glob("/kaggle/input/**/adapter/adapter_config.json", recursive=True)
 }
 print("adapters:", adapters)
+assert {"r16", "r32"} <= set(adapters), "Attach the output of notebook 01 (both adapters)"
 LIMIT = int(os.environ.get("JOBLENS_LIMIT", "0"))  # set e.g. 5 for a quick smoke test
 
 
