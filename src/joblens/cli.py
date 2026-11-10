@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import typer
 
 from joblens.jsonio import jsonl_lines
@@ -113,12 +115,25 @@ def prepare_teacher() -> None:
     _echo_json(write_teacher_inputs(INTERIM / "teacher_inputs.jsonl", INTERIM))
 
 
+def _require(*paths: Path, hint: str) -> None:
+    """Stop before overwriting committed results when the local inputs are missing."""
+    missing = [p for p in paths if not p.exists()]
+    if missing:
+        typer.secho(f"{', '.join(map(str, missing))} missing: {hint}", fg="red")
+        raise typer.Exit(1)
+
+
 @app.command("gold-report")
 def gold_report_cmd() -> None:
     """Teacher accuracy against the gold labels (correction rate per field)."""
     from joblens.config import ARTIFACTS, GOLD, RESULTS
     from joblens.gold import gold_report, load_label_file
 
+    _require(
+        ARTIFACTS / "teacher" / "labels_test.jsonl",
+        GOLD / "labels_test.jsonl",
+        hint="run `make import-artifacts` and `make review` first",
+    )
     rep = gold_report(
         load_label_file(ARTIFACTS / "teacher" / "labels_test.jsonl"),
         load_label_file(GOLD / "labels_test.jsonl"),
@@ -196,6 +211,7 @@ def costs() -> None:
     from joblens.costs import write_costs
     from joblens.report import measured_for_costs
 
+    _require(ARTIFACTS / "predictions", hint="run `make import-artifacts` first")
     _echo_json(write_costs(RESULTS / "costs.json", measured_for_costs(ARTIFACTS))["rows"])
 
 
@@ -205,6 +221,7 @@ def report() -> None:
     from joblens.config import ARTIFACTS, DOCS, RESULTS, ROOT
     from joblens.report import main_table, replace_block, write_costs_md, write_results_md
 
+    _require(ARTIFACTS / "training", hint="run `make import-artifacts` first")
     write_results_md(DOCS / "RESULTS.md", RESULTS, ARTIFACTS / "training")
     write_costs_md(DOCS / "COSTS.md", RESULTS)
     if (ROOT / "README.md").exists():
@@ -259,6 +276,11 @@ def error_candidates(system: str = "c") -> None:
     from joblens.config import ARTIFACTS, GOLD, RESULTS
     from joblens.error_analysis import write_candidates
 
+    _require(
+        ARTIFACTS / "predictions" / f"predictions_{system}.jsonl",
+        GOLD / "labels_test.jsonl",
+        hint="run `make import-artifacts` and `make review` first",
+    )
     _echo_json(
         write_candidates(
             ARTIFACTS / "predictions" / f"predictions_{system}.jsonl",
@@ -274,6 +296,7 @@ def card() -> None:
     from joblens.config import ARTIFACTS, DOCS, RESULTS
     from joblens.report import language_table, main_table, replace_block, training_table
 
+    _require(ARTIFACTS / "training", hint="run `make import-artifacts` first")
     body = "\n\n".join(
         [main_table(RESULTS), language_table(RESULTS), training_table(ARTIFACTS / "training")]
     )

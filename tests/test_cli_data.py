@@ -66,8 +66,9 @@ def test_data_commands(tmp_path, monkeypatch):
     assert r.invoke(app, ["export-schema"]).exit_code == 0
     assert (tmp_path / "schema" / "job_posting.schema.json").exists()
     assert r.invoke(app, ["labeling-guide"]).exit_code == 0
-    res = r.invoke(app, ["gold-report"])
-    assert res.exit_code == 0 and "reviewed: 0" in res.output
+    res = r.invoke(app, ["gold-report"])  # no teacher or gold labels yet: refuse, write nothing
+    assert res.exit_code == 1 and "missing" in res.output
+    assert not (results / "teacher_vs_gold.json").exists()
 
 
 def test_tokens_helpers():

@@ -157,9 +157,22 @@ def test_eval_without_gold_and_missing_files(env):
 
 
 def test_report_without_any_results(env):
+    (env / "artifacts" / "training").mkdir(parents=True, exist_ok=True)
     res = CliRunner().invoke(app, ["report"])
     assert res.exit_code == 0
     assert "not measured" in (env / "docs" / "RESULTS.md").read_text()
+
+
+def test_report_costs_card_refuse_without_imported_artifacts(env):
+    import shutil
+
+    shutil.rmtree(env / "artifacts", ignore_errors=True)
+    before = "# Results\n<!-- BEGIN GENERATED -->\nreal numbers\n<!-- END GENERATED -->\n"
+    (env / "docs" / "RESULTS.md").write_text(before)
+    for cmd in ("report", "card", "costs", "gold-report", "error-candidates"):
+        res = CliRunner().invoke(app, [cmd])
+        assert res.exit_code == 1 and "missing" in res.output, cmd
+    assert (env / "docs" / "RESULTS.md").read_text() == before
 
 
 def test_import_rejects_text_and_bad_labels(tmp_path):

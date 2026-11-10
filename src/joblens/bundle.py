@@ -52,6 +52,8 @@ def build_notebooks(src_dir: Path, out_dir: Path) -> list[Path]:
     out = []
     for name in NOTEBOOKS:
         nb = jupytext.read(src_dir / f"{name}.py")
+        for i, cell in enumerate(nb.cells):  # stable ids: rebuilding leaves git clean
+            cell["id"] = f"cell-{i:03d}"
         path = out_dir / f"{name}.ipynb"
         jupytext.write(nb, path)
         out.append(path)
