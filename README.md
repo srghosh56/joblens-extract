@@ -76,7 +76,7 @@ Data: [Arbeitnow](https://www.arbeitnow.com) Job Board API and the Bundesagentur
 
 ## Links
 - GitHub: https://github.com/srghosh56/joblens-extract
-- Hugging Face adapter: not yet published (planned: https://huggingface.co/gmohor21/joblens-mistral-7b-lora)
+- Hugging Face adapter: https://huggingface.co/gmohor21/joblens-mistral-7b-lora
 
 ## Docs
 [DECISIONS](docs/DECISIONS.md) · [LABELING_GUIDE](docs/LABELING_GUIDE.md) · [GOLD_LABELLING](docs/GOLD_LABELLING.md) · [RESULTS](docs/RESULTS.md) · [ERROR_ANALYSIS](docs/ERROR_ANALYSIS.md) · [COSTS](docs/COSTS.md) · [MODEL_CARD](docs/MODEL_CARD.md)
