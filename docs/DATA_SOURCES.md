@@ -1,6 +1,6 @@
 # Data sources and terms (read 2026-11-01)
 
-Raw posting texts are **never** committed or published. Only posting IDs/URLs, labels and the schema are committed (`data/splits/ids_*.csv`, `data/gold/labels_test.jsonl`, `data/MANIFEST.json`). I read and accepted both sources' terms on 2026-11-01.
+Raw posting texts are **never** committed or published. The repository holds only posting IDs/URLs (`data/splits/ids_*.csv`), the split manifest (`data/MANIFEST.json`), the schema and aggregate results. Per-posting labels stay local. I read and accepted both sources' terms on 2026-11-01.
 
 ## 1. Bundesagentur für Arbeit: Jobsuche API
 - Docs: https://jobsuche.api.bund.dev/ (OpenAPI 3.0 spec `openapi.yaml`, version 2.1.0) and https://github.com/bundesAPI/jobsuche-api (README).
@@ -21,4 +21,4 @@ Raw posting texts are **never** committed or published. Only posting IDs/URLs, l
 - Compliance: non-commercial research; no texts committed or published; README and model card link back to arbeitnow.com; ≥ 1 s between requests and caching.
 
 ## Plain-English summary
-Both sources allow *reading* postings for a personal, non-commercial project. Neither allows republishing the texts. So the repo and the Hugging Face release contain only IDs, URLs, labels, schema and a model trained on the labels. If either provider objects or revokes access, delete `data/raw/` and `data/interim/` and stop collecting.
+Both sources allow *reading* postings for a personal, non-commercial project. Neither allows republishing the texts. So the repo and the Hugging Face release contain only IDs, URLs, the schema, aggregate results and a model trained on the labels. If either provider objects or revokes access, delete `data/raw/` and `data/interim/` and stop collecting.

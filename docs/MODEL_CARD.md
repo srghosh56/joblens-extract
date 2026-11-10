@@ -33,7 +33,7 @@ A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or E
 
 ## Data
 - **Sources:** Bundesagentur für Arbeit Jobsuche API (mostly German; unofficial community docs at jobsuche.api.bund.dev) and the [Arbeitnow](https://www.arbeitnow.com) Job Board API (mostly English). Terms are summarised in `docs/DATA_SOURCES.md`.
-- **No posting texts are distributed** in this repository or with the adapter. Only posting IDs/URLs, labels and the schema are published.
+- **No posting texts are distributed** in this repository or with the adapter. Only posting IDs/URLs, the schema and aggregate results are published; per-posting labels are not.
 - **Size:** 3,000 training postings (2,700 train + 300 validation) and 200 test postings, about half English and half German. Splits are grouped by company: no company appears in two splits. Exact counts are in `data/MANIFEST.json`.
 - **Labels:** produced by the open-weight teacher with JSON-schema constrained decoding (temperature 0), validated with Pydantic, with one re-ask on failure. The 200 test labels were corrected in an LLM-assisted pass, with my decisions on the ambiguous cases (`docs/GOLD_LABELLING.md`).
 

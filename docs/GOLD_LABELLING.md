@@ -46,4 +46,4 @@ The skill numbers look high because a list counts as changed if any item differs
 - **The rules are stricter than the teacher's prompt.** The teacher was never told, for example, to leave out unrequested languages. Some of the teacher's (and the student's) errors are partly this mismatch, which I count as a finding, not a flaw of the gold set (see [RESULTS](RESULTS.md), finding 3).
 
 ## Why the gold labels are not in this repository
-The labels contain employer names, and some small employers on the job boards are private individuals ([D-021](DECISIONS.md)). I publish only aggregate results (`artifacts/results/`). The test posting IDs are in `data/splits/ids_test.csv`.
+Two reasons. First, the labels are close copies of what each posting says (title, employer, salary, skills), and both job boards only allow reading postings, not republishing them ([DATA_SOURCES](DATA_SOURCES.md)). Second, some small employers on the boards are private individuals ([D-021](DECISIONS.md)). So I publish only the aggregate results (`artifacts/results/`). The test posting IDs are in `data/splits/ids_test.csv`, so anyone can look the postings up at the source.

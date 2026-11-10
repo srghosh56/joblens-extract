@@ -66,7 +66,7 @@ make publish-hf            # optional; shows the files and asks for confirmation
 Every number in the docs comes from one of these targets. Coverage excludes Kaggle-only GPU code (`src/joblens/kaggle/`) and the Streamlit UI ([D-012](docs/DECISIONS.md)).
 
 ## Data and licences
-Data: [Arbeitnow](https://www.arbeitnow.com) Job Board API and the Bundesagentur für Arbeit Jobsuche API (unofficial docs: [bund.dev](https://jobsuche.api.bund.dev/)). Terms: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md). **Posting texts are never committed or published**, only IDs/URLs, labels and the schema. Code: MIT ([LICENSE](LICENSE)). Docs and model-card text: CC-BY-4.0. Adapter weights: CC-BY-NC-4.0, because the data terms allow only non-commercial use ([D-019](docs/DECISIONS.md)). Base model and teacher: Apache-2.0.
+Data: [Arbeitnow](https://www.arbeitnow.com) Job Board API and the Bundesagentur für Arbeit Jobsuche API (unofficial docs: [bund.dev](https://jobsuche.api.bund.dev/)). Terms: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md). **Posting texts are never committed or published**; the repo holds posting IDs/URLs, the schema, code and aggregate results. The per-posting gold labels stay local ([why](docs/GOLD_LABELLING.md#why-the-gold-labels-are-not-in-this-repository)). Code: MIT ([LICENSE](LICENSE)). Docs and model-card text: CC-BY-4.0. Adapter weights: CC-BY-NC-4.0, because the data terms allow only non-commercial use ([D-019](docs/DECISIONS.md)). Base model and teacher: Apache-2.0.
 
 ## Limitations
 - **Distillation ceiling:** the adapter learns from the teacher, so it can inherit the teacher's mistakes.

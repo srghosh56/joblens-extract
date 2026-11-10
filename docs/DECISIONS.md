@@ -132,7 +132,7 @@ Each entry: context, options, choice, consequence.
 
 ## D-021 No company names in the published ID files
 - **Context:** Some small employers on the boards are private individuals, and nothing reads the `company` column of `data/splits/ids_*.csv`.
-- **Choice:** The published ID files keep only source, source ID, URL and language. Company grouping happens on the private interim files.
+- **Choice:** The published ID files keep only source, source ID, URL and language. Company grouping happens on the private interim files. Arbeitnow's own URLs contain the employer's slug, as published by the board; Bundesagentur URLs are only a reference number.
 - **Consequence:** `data/MANIFEST.json` still proves that no company crosses splits, without publishing the names.
 
 ## D-022 Data-quality log: what the first labelling runs exposed
