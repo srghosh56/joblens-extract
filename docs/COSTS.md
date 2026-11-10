@@ -7,11 +7,18 @@ The tables below are generated from measured throughput and token counts (`make 
 <!-- BEGIN GENERATED -->
 | System | Hardware basis | Throughput (postings/s) | USD / 1k self-hosted (estimate) | USD / 1k at Mistral API list price |
 |---|---|---|---|---|
-| all | not measured | not measured | not measured | not measured |
+| a | AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux | 0.03 | 6.17 | not measured |
+| c | AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux | 0.04 | 5.14 | not measured |
+| d | 2 x AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux | 0.27 | 1.36 | 0.40 |
+
+Prices read on 2026-11-01; sources in `artifacts/results/costs.json`.
 
 | System | 10k / month | 100k / month | 1M / month | basis |
 |---|---|---|---|---|
-| all | not measured | not measured | not measured | run `make costs` after importing artifacts |
+| a | $61.73 | $617.30 | $6,173.02 | self-hosted (estimate, 100% utilisation) |
+| c | $51.40 | $514.02 | $5,140.25 | self-hosted (estimate, 100% utilisation) |
+| d | $13.58 | $135.83 | $1,358.26 | self-hosted (estimate, 100% utilisation) |
+| d | $4.00 | $39.96 | $399.59 | Mistral API list price |
 <!-- END GENERATED -->
 
 ## How to decide (independent of the exact numbers)

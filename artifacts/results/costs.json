@@ -1,0 +1,65 @@
+{
+  "price_date": "2026-11-01",
+  "prices": {
+    "mistral_small_api": {
+      "model": "Mistral Small 4 (API list price; the open-weight 24B-2501 teacher is not sold as such, Small 4 is Mistral's current 'Small' API model)",
+      "input_usd_per_m": 0.15,
+      "cached_input_usd_per_m": 0.015,
+      "output_usd_per_m": 0.6,
+      "batch_discount": 0.5,
+      "source": "https://mistral.ai/pricing/api"
+    },
+    "t4_gpu_hour": {
+      "instance": "AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux",
+      "usd_per_hour": 0.658,
+      "source": "AWS public on-demand price map (ec2-ondemand-without-sec-sel, EU Frankfurt, Linux), publication date 2026-10-29"
+    },
+    "cpu_hour": {
+      "instance": "AWS c7i.xlarge (4 vCPU, 8 GiB), EU (Frankfurt), Linux",
+      "usd_per_hour": 0.2037,
+      "source": "AWS public on-demand price map (same file as above)"
+    }
+  },
+  "rows": {
+    "a": {
+      "system": "a",
+      "usd_per_1k_selfhosted_estimate": 6.173015254357289,
+      "throughput_postings_per_s": 0.029609156991595335,
+      "price_basis": "AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux",
+      "usd_per_month_selfhosted_estimate": {
+        "10000": 61.73015254357289,
+        "100000": 617.301525435729,
+        "1000000": 6173.015254357289
+      }
+    },
+    "c": {
+      "system": "c",
+      "usd_per_1k_selfhosted_estimate": 5.140248824367282,
+      "throughput_postings_per_s": 0.03555815759566388,
+      "price_basis": "AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux",
+      "usd_per_month_selfhosted_estimate": {
+        "10000": 51.40248824367281,
+        "100000": 514.0248824367281,
+        "1000000": 5140.248824367282
+      }
+    },
+    "d": {
+      "system": "d",
+      "usd_per_1k_selfhosted_estimate": 1.3582563146366253,
+      "throughput_postings_per_s": 0.2691359146402001,
+      "price_basis": "2 x AWS g4dn.xlarge (1x NVIDIA T4, 4 vCPU, 16 GiB), EU (Frankfurt), Linux",
+      "usd_per_1k_if_mistral_api": 0.399588,
+      "usd_per_1k_if_mistral_api_batch": 0.199794,
+      "usd_per_month_selfhosted_estimate": {
+        "10000": 13.582563146366255,
+        "100000": 135.82563146366255,
+        "1000000": 1358.2563146366253
+      },
+      "usd_per_month_if_mistral_api": {
+        "10000": 3.99588,
+        "100000": 39.958800000000004,
+        "1000000": 399.588
+      }
+    }
+  }
+}

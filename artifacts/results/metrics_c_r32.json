@@ -1,0 +1,212 @@
+{
+  "n": 200,
+  "json_parse_rate": 0.96,
+  "schema_valid_rate": 0.96,
+  "micro_f1": 0.6198414867450124,
+  "macro_f1": 0.7236874213085583,
+  "enum_accuracy": 0.9064285714285714,
+  "int_exact_match": 0.9824999999999999,
+  "salary_accuracy": 0.975,
+  "skills_f1": 0.49633173843700157,
+  "skills_f1_fuzzy": 0.5480063795853269,
+  "nice_to_have_f1": 0.46590909090909094,
+  "nice_to_have_f1_fuzzy": 0.5189393939393939,
+  "per_field": {
+    "title": {
+      "precision": 0.7395833333333334,
+      "recall": 0.71,
+      "f1": 0.7244897959183674,
+      "accuracy": 0.71,
+      "support_gold_nonempty": 200.0
+    },
+    "company": {
+      "precision": 0.9765625,
+      "recall": 0.7062146892655368,
+      "f1": 0.819672131147541,
+      "accuracy": 0.74,
+      "support_gold_nonempty": 177.0
+    },
+    "locations": {
+      "precision": 0.6296296296296297,
+      "recall": 0.8673469387755102,
+      "f1": 0.7296137339055794,
+      "accuracy": 0.69,
+      "support_gold_nonempty": 196.0
+    },
+    "remote_policy": {
+      "precision": 0.918918918918919,
+      "recall": 0.864406779661017,
+      "f1": 0.8908296943231442,
+      "accuracy": 0.885,
+      "support_gold_nonempty": 118.0
+    },
+    "seniority": {
+      "precision": 0.8031496062992126,
+      "recall": 0.7285714285714285,
+      "f1": 0.7640449438202247,
+      "accuracy": 0.8,
+      "support_gold_nonempty": 140.0
+    },
+    "min_years_experience": {
+      "precision": 0.9861111111111112,
+      "recall": 0.9342105263157895,
+      "f1": 0.9594594594594595,
+      "accuracy": 0.97,
+      "support_gold_nonempty": 76.0
+    },
+    "required_skills": {
+      "precision": 0.4380630630630631,
+      "recall": 0.5724797645327446,
+      "f1": 0.49633173843700157,
+      "accuracy": 0.08,
+      "support_gold_nonempty": 1359.0
+    },
+    "nice_to_have_skills": {
+      "precision": 0.6612903225806451,
+      "recall": 0.35964912280701755,
+      "f1": 0.46590909090909094,
+      "accuracy": 0.46,
+      "support_gold_nonempty": 684.0
+    },
+    "languages_required": {
+      "precision": 0.47619047619047616,
+      "recall": 0.6593406593406593,
+      "f1": 0.5529953917050692,
+      "accuracy": 0.38,
+      "support_gold_nonempty": 182.0
+    },
+    "english_sufficient": {
+      "precision": 0.9424460431654677,
+      "recall": 0.903448275862069,
+      "f1": 0.9225352112676055,
+      "accuracy": 0.9,
+      "support_gold_nonempty": 145.0
+    },
+    "contract_type": {
+      "precision": 0.8507462686567164,
+      "recall": 0.890625,
+      "f1": 0.8702290076335878,
+      "accuracy": 0.895,
+      "support_gold_nonempty": 64.0
+    },
+    "contract_duration_months": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1": 0.888888888888889,
+      "accuracy": 0.995,
+      "support_gold_nonempty": 5.0
+    },
+    "salary": {
+      "precision": 0.8214285714285714,
+      "recall": 0.8214285714285714,
+      "f1": 0.8214285714285714,
+      "accuracy": 0.975,
+      "support_gold_nonempty": 28.0
+    },
+    "visa_sponsorship": {
+      "precision": 0.6666666666666666,
+      "recall": 0.6666666666666666,
+      "f1": 0.6666666666666666,
+      "accuracy": 0.95,
+      "support_gold_nonempty": 3.0
+    },
+    "relocation_support": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.7499999999999999,
+      "accuracy": 0.955,
+      "support_gold_nonempty": 5.0
+    },
+    "application_deadline": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 1.0,
+      "support_gold_nonempty": 0.0
+    },
+    "posting_language": {
+      "precision": 1.0,
+      "recall": 0.96,
+      "f1": 0.9795918367346939,
+      "accuracy": 0.96,
+      "support_gold_nonempty": 200.0
+    }
+  },
+  "ci95": {
+    "json_parse_rate": [
+      0.93,
+      0.985
+    ],
+    "schema_valid_rate": [
+      0.93,
+      0.985
+    ],
+    "micro_f1": [
+      0.5871227923793632,
+      0.653020892151327
+    ],
+    "macro_f1": [
+      0.6620979602166951,
+      0.7561747669670432
+    ],
+    "enum_accuracy": [
+      0.8764285714285714,
+      0.9321428571428572
+    ],
+    "int_exact_match": [
+      0.97,
+      0.995
+    ],
+    "salary_accuracy": [
+      0.95,
+      0.995
+    ],
+    "skills_f1": [
+      0.4507826086956521,
+      0.542875157629256
+    ],
+    "skills_f1_fuzzy": [
+      0.5023817084788822,
+      0.5939470365699875
+    ]
+  },
+  "bootstrap": {
+    "n_boot": 1000,
+    "seed": 0,
+    "method": "percentile, resample postings"
+  },
+  "by_language": {
+    "en": {
+      "n": 99,
+      "json_parse_rate": 0.9494949494949495,
+      "schema_valid_rate": 0.9494949494949495,
+      "micro_f1": 0.5861182519280206,
+      "macro_f1": 0.6960878369663763,
+      "enum_accuracy": 0.8773448773448774,
+      "int_exact_match": 0.9747474747474747,
+      "salary_accuracy": 0.9797979797979798,
+      "skills_f1": 0.46492575524833585,
+      "skills_f1_fuzzy": 0.5099846390168971
+    },
+    "de": {
+      "n": 101,
+      "json_parse_rate": 0.9702970297029703,
+      "schema_valid_rate": 0.9702970297029703,
+      "micro_f1": 0.6673247778874629,
+      "macro_f1": 0.705444720449184,
+      "enum_accuracy": 0.9349363507779349,
+      "int_exact_match": 0.9900990099009901,
+      "salary_accuracy": 0.9702970297029703,
+      "skills_f1": 0.5482233502538071,
+      "skills_f1_fuzzy": 0.6108291032148899
+    }
+  },
+  "latency": {
+    "n": 200.0,
+    "p50_s": 14.584427984000286,
+    "p95_s": 28.2571488829999,
+    "mean_s": 16.60158885591003,
+    "tokens_per_s_bs1": 14.10467407862838
+  },
+  "name": "(c) adapter r32"
+}

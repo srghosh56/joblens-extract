@@ -1,0 +1,212 @@
+{
+  "n": 200,
+  "json_parse_rate": 0.93,
+  "schema_valid_rate": 0.62,
+  "micro_f1": 0.4387074713626261,
+  "macro_f1": 0.4281656929662848,
+  "enum_accuracy": 0.43857142857142856,
+  "int_exact_match": 0.9125,
+  "salary_accuracy": 0.885,
+  "skills_f1": 0.37625570776255707,
+  "skills_f1_fuzzy": 0.44018264840182647,
+  "nice_to_have_f1": 0.31673306772908366,
+  "nice_to_have_f1_fuzzy": 0.4123505976095617,
+  "per_field": {
+    "title": {
+      "precision": 0.6854838709677419,
+      "recall": 0.425,
+      "f1": 0.5246913580246914,
+      "accuracy": 0.425,
+      "support_gold_nonempty": 200.0
+    },
+    "company": {
+      "precision": 0.875,
+      "recall": 0.4350282485875706,
+      "f1": 0.5811320754716982,
+      "accuracy": 0.445,
+      "support_gold_nonempty": 177.0
+    },
+    "locations": {
+      "precision": 0.4819277108433735,
+      "recall": 0.40816326530612246,
+      "f1": 0.44198895027624313,
+      "accuracy": 0.365,
+      "support_gold_nonempty": 196.0
+    },
+    "remote_policy": {
+      "precision": 0.5047619047619047,
+      "recall": 0.4491525423728814,
+      "f1": 0.47533632286995514,
+      "accuracy": 0.34,
+      "support_gold_nonempty": 118.0
+    },
+    "seniority": {
+      "precision": 0.6101694915254238,
+      "recall": 0.5142857142857142,
+      "f1": 0.5581395348837208,
+      "accuracy": 0.38,
+      "support_gold_nonempty": 140.0
+    },
+    "min_years_experience": {
+      "precision": 1.0,
+      "recall": 0.5789473684210527,
+      "f1": 0.7333333333333334,
+      "accuracy": 0.84,
+      "support_gold_nonempty": 76.0
+    },
+    "required_skills": {
+      "precision": 0.49578820697954273,
+      "recall": 0.3031640912435614,
+      "f1": 0.37625570776255707,
+      "accuracy": 0.055,
+      "support_gold_nonempty": 1359.0
+    },
+    "nice_to_have_skills": {
+      "precision": 0.496875,
+      "recall": 0.2324561403508772,
+      "f1": 0.31673306772908366,
+      "accuracy": 0.41,
+      "support_gold_nonempty": 684.0
+    },
+    "languages_required": {
+      "precision": 0.6730769230769231,
+      "recall": 0.38461538461538464,
+      "f1": 0.4895104895104896,
+      "accuracy": 0.55,
+      "support_gold_nonempty": 182.0
+    },
+    "english_sufficient": {
+      "precision": 0.9210526315789473,
+      "recall": 0.4827586206896552,
+      "f1": 0.6334841628959276,
+      "accuracy": 0.52,
+      "support_gold_nonempty": 145.0
+    },
+    "contract_type": {
+      "precision": 0.2413793103448276,
+      "recall": 0.4375,
+      "f1": 0.3111111111111111,
+      "accuracy": 0.175,
+      "support_gold_nonempty": 64.0
+    },
+    "contract_duration_months": {
+      "precision": 0.75,
+      "recall": 0.6,
+      "f1": 0.6666666666666665,
+      "accuracy": 0.985,
+      "support_gold_nonempty": 5.0
+    },
+    "salary": {
+      "precision": 0.6666666666666666,
+      "recall": 0.21428571428571427,
+      "f1": 0.3243243243243243,
+      "accuracy": 0.885,
+      "support_gold_nonempty": 28.0
+    },
+    "visa_sponsorship": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 0.61,
+      "support_gold_nonempty": 3.0
+    },
+    "relocation_support": {
+      "precision": 0.05263157894736842,
+      "recall": 0.4,
+      "f1": 0.09302325581395349,
+      "accuracy": 0.435,
+      "support_gold_nonempty": 5.0
+    },
+    "application_deadline": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "accuracy": 1.0,
+      "support_gold_nonempty": 0.0
+    },
+    "posting_language": {
+      "precision": 0.9838709677419355,
+      "recall": 0.61,
+      "f1": 0.7530864197530864,
+      "accuracy": 0.61,
+      "support_gold_nonempty": 200.0
+    }
+  },
+  "ci95": {
+    "json_parse_rate": [
+      0.895,
+      0.96
+    ],
+    "schema_valid_rate": [
+      0.555,
+      0.685
+    ],
+    "micro_f1": [
+      0.39765510503175383,
+      0.4774130646733831
+    ],
+    "macro_f1": [
+      0.3776976939798442,
+      0.4657652334346868
+    ],
+    "enum_accuracy": [
+      0.3921428571428572,
+      0.4857142857142857
+    ],
+    "int_exact_match": [
+      0.885,
+      0.94
+    ],
+    "salary_accuracy": [
+      0.84,
+      0.925
+    ],
+    "skills_f1": [
+      0.3211091234347048,
+      0.4280936454849498
+    ],
+    "skills_f1_fuzzy": [
+      0.38475021910604734,
+      0.488828089375285
+    ]
+  },
+  "bootstrap": {
+    "n_boot": 1000,
+    "seed": 0,
+    "method": "percentile, resample postings"
+  },
+  "by_language": {
+    "en": {
+      "n": 99,
+      "json_parse_rate": 0.9393939393939394,
+      "schema_valid_rate": 0.696969696969697,
+      "micro_f1": 0.4618593563766388,
+      "macro_f1": 0.4500793090018398,
+      "enum_accuracy": 0.4891774891774892,
+      "int_exact_match": 0.8787878787878788,
+      "salary_accuracy": 0.9191919191919192,
+      "skills_f1": 0.4038155802861685,
+      "skills_f1_fuzzy": 0.46899841017488075
+    },
+    "de": {
+      "n": 101,
+      "json_parse_rate": 0.9207920792079208,
+      "schema_valid_rate": 0.5445544554455446,
+      "micro_f1": 0.40754111512234253,
+      "macro_f1": 0.3985156957753646,
+      "enum_accuracy": 0.388967468175389,
+      "int_exact_match": 0.9455445544554455,
+      "salary_accuracy": 0.8514851485148515,
+      "skills_f1": 0.33905579399141633,
+      "skills_f1_fuzzy": 0.4012875536480687
+    }
+  },
+  "latency": {
+    "n": 200.0,
+    "p50_s": 20.26921611599937,
+    "p95_s": 31.26015386800009,
+    "mean_s": 21.26211827056001,
+    "tokens_per_s_bs1": 16.00146305606262
+  },
+  "name": "(a) Mistral-7B base, zero-shot"
+}

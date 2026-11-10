@@ -16,7 +16,7 @@ pipeline_tag: text-generation
 
 # JobLens: Mistral-7B LoRA for job-posting extraction (v1.0)
 
-A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or English job posting into one JSON object following the JobLens label schema (`schema/job_posting.schema.json`, schema version **1.0.0**). It was distilled from an open-weight teacher, `mistralai/Mistral-Small-24B-Instruct-2501` (AWQ 4-bit), and evaluated against hand-checked gold labels.
+A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or English job posting into one JSON object following the JobLens label schema (`schema/job_posting.schema.json`, schema version **1.0.0**). It was distilled from an open-weight teacher, `mistralai/Mistral-Small-24B-Instruct-2501` (AWQ 4-bit), and evaluated against 200 gold labels (see `docs/GOLD_LABELLING.md` in the repository).
 
 - **Model version:** `joblens-mistral-7b-lora-v1.0`
 - **Code:** MIT. **This card's text:** CC-BY-4.0. **Adapter weights:** CC-BY-NC-4.0, because the terms of the training data allow only non-commercial use. The base model itself is Apache-2.0.
@@ -35,7 +35,7 @@ A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or E
 - **Sources:** Bundesagentur für Arbeit Jobsuche API (mostly German; unofficial community docs at jobsuche.api.bund.dev) and the [Arbeitnow](https://www.arbeitnow.com) Job Board API (mostly English). Terms are summarised in `docs/DATA_SOURCES.md`.
 - **No posting texts are distributed** in this repository or with the adapter. Only posting IDs/URLs, labels and the schema are published.
 - **Size:** 3,000 training postings (2,700 train + 300 validation) and 200 test postings, about half English and half German. Splits are grouped by company: no company appears in two splits. Exact counts are in `data/MANIFEST.json`.
-- **Labels:** produced by the open-weight teacher with JSON-schema constrained decoding (temperature 0), validated with Pydantic, with one re-ask on failure. The 200 test labels were checked by hand.
+- **Labels:** produced by the open-weight teacher with JSON-schema constrained decoding (temperature 0), validated with Pydantic, with one re-ask on failure. The 200 test labels were corrected in an LLM-assisted pass, with my decisions on the ambiguous cases (`docs/GOLD_LABELLING.md`).
 
 ## Label schema (v1.0.0)
 `title`, `company`, `locations[{city, country}]`, `remote_policy` (onsite/hybrid/remote/unknown), `seniority` (intern/junior/mid/senior/staff_plus/unknown), `min_years_experience`, `required_skills[]`, `nice_to_have_skills[]`, `languages_required[{language, level}]`, `english_sufficient` (derived: "no" if German ≥ good is required), `contract_type`, `contract_duration_months`, `salary{min, max, currency, period}`, `visa_sponsorship`, `relocation_support`, `application_deadline`, `posting_language`. Full guide: `docs/LABELING_GUIDE.md`.
@@ -45,31 +45,31 @@ QLoRA: NF4 4-bit base (bitsandbytes via Unsloth), LoRA on q, k, v, o, gate, up a
 
 ## Results
 <!-- BEGIN GENERATED -->
-Test postings with gold labels: **not measured**
+Test postings with gold labels: **200**
 
 | System | json_parse_rate | schema_valid_rate | micro_f1 | macro_f1 | enum_accuracy | salary_accuracy | skills_f1 | micro-F1 95% CI |
 |---|---|---|---|---|---|---|---|---|
-| (a) Mistral-7B base, zero-shot | not measured | not measured | not measured | not measured | not measured | not measured | not measured | not measured |
-| (b) Mistral-7B base, few-shot | not measured | not measured | not measured | not measured | not measured | not measured | not measured | not measured |
-| (c) Mistral-7B + QLoRA adapter | not measured | not measured | not measured | not measured | not measured | not measured | not measured | not measured |
-| (d) Mistral-Small-24B open-weight, JSON-schema decoding | not measured | not measured | not measured | not measured | not measured | not measured | not measured | not measured |
-| teacher labels (after re-ask) | not measured | not measured | not measured | not measured | not measured | not measured | not measured | not measured |
+| (a) Mistral-7B base, zero-shot | 93.0% | 62.0% | 43.9% | 42.8% | 43.9% | 88.5% | 37.6% | [39.8%, 47.7%] |
+| (b) Mistral-7B base, few-shot | 100.0% | 42.0% | 33.1% | 40.8% | 34.4% | 89.0% | 20.5% | [28.3%, 37.4%] |
+| (c) Mistral-7B + QLoRA adapter | 98.0% | 97.5% | 62.9% | 73.5% | 91.5% | 97.5% | 49.7% | [59.6%, 66.3%] |
+| (d) Mistral-Small-24B open-weight, JSON-schema decoding | 99.0% | 99.0% | 75.1% | 79.6% | 94.2% | 99.0% | 66.8% | [72.2%, 78.0%] |
+| teacher labels (after re-ask) | 100.0% | 100.0% | 75.5% | 79.9% | 95.1% | 99.0% | 67.0% | [72.7%, 78.3%] |
 
 | System | lang | n | micro_f1 | schema_valid_rate | skills_f1 |
 |---|---|---|---|---|---|
-| a | en | not measured | not measured | not measured | not measured |
-| a | de | not measured | not measured | not measured | not measured |
-| b | en | not measured | not measured | not measured | not measured |
-| b | de | not measured | not measured | not measured | not measured |
-| c | en | not measured | not measured | not measured | not measured |
-| c | de | not measured | not measured | not measured | not measured |
-| d | en | not measured | not measured | not measured | not measured |
-| d | de | not measured | not measured | not measured | not measured |
+| a | en | 99 | 46.2% | 69.7% | 40.4% |
+| a | de | 101 | 40.8% | 54.5% | 33.9% |
+| b | en | 99 | 36.0% | 50.5% | 23.1% |
+| b | de | 101 | 29.2% | 33.7% | 16.9% |
+| c | en | 99 | 59.4% | 96.0% | 46.5% |
+| c | de | 101 | 67.9% | 99.0% | 55.0% |
+| d | en | 99 | 73.7% | 99.0% | 66.9% |
+| d | de | 101 | 77.0% | 99.0% | 66.6% |
 
 | Config | trainable params | best val loss | steps | wall time (h) | peak GPU mem (GB) |
 |---|---|---|---|---|---|
-| r16 | not measured | not measured | not measured | not measured | not measured |
-| r32 | not measured | not measured | not measured | not measured | not measured |
+| r16 | 41943040 | 0.39 | 200 | 7.75 | 13.59 |
+| r32 | 83886080 | 0.40 | 200 | 8.56 | 13.71 |
 <!-- END GENERATED -->
 
 ## Limitations and bias

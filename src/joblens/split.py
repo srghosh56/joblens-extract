@@ -85,7 +85,7 @@ def grouped_split(
     test_max_company: int = 3,
 ) -> SplitResult:
     """Assign whole companies to one split. Test is filled first from small companies
-    (more employer diversity for the hand-checked set), then val, then train."""
+    (more employer diversity for the gold set), then val, then train."""
     rng = random.Random(seed)
     res = SplitResult()
     groups: dict[str, list[CleanPosting]] = defaultdict(list)

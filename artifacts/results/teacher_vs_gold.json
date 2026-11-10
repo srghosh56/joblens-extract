@@ -1,0 +1,109 @@
+{
+  "n_reviewed": 200,
+  "n_gold_total": 200,
+  "postings_without_any_correction": 12,
+  "per_field": {
+    "title": {
+      "corrected": 55,
+      "n": 200,
+      "correction_rate": 0.275,
+      "teacher_accuracy": 0.725
+    },
+    "company": {
+      "corrected": 38,
+      "n": 200,
+      "correction_rate": 0.19,
+      "teacher_accuracy": 0.81
+    },
+    "locations": {
+      "corrected": 51,
+      "n": 200,
+      "correction_rate": 0.255,
+      "teacher_accuracy": 0.745
+    },
+    "remote_policy": {
+      "corrected": 16,
+      "n": 200,
+      "correction_rate": 0.08,
+      "teacher_accuracy": 0.92
+    },
+    "seniority": {
+      "corrected": 27,
+      "n": 200,
+      "correction_rate": 0.135,
+      "teacher_accuracy": 0.865
+    },
+    "min_years_experience": {
+      "corrected": 2,
+      "n": 200,
+      "correction_rate": 0.01,
+      "teacher_accuracy": 0.99
+    },
+    "required_skills": {
+      "corrected": 141,
+      "n": 200,
+      "correction_rate": 0.705,
+      "teacher_accuracy": 0.29500000000000004
+    },
+    "nice_to_have_skills": {
+      "corrected": 78,
+      "n": 200,
+      "correction_rate": 0.39,
+      "teacher_accuracy": 0.61
+    },
+    "languages_required": {
+      "corrected": 87,
+      "n": 200,
+      "correction_rate": 0.435,
+      "teacher_accuracy": 0.565
+    },
+    "english_sufficient": {
+      "corrected": 6,
+      "n": 200,
+      "correction_rate": 0.03,
+      "teacher_accuracy": 0.97
+    },
+    "contract_type": {
+      "corrected": 15,
+      "n": 200,
+      "correction_rate": 0.075,
+      "teacher_accuracy": 0.925
+    },
+    "contract_duration_months": {
+      "corrected": 0,
+      "n": 200,
+      "correction_rate": 0.0,
+      "teacher_accuracy": 1.0
+    },
+    "salary": {
+      "corrected": 2,
+      "n": 200,
+      "correction_rate": 0.01,
+      "teacher_accuracy": 0.99
+    },
+    "visa_sponsorship": {
+      "corrected": 2,
+      "n": 200,
+      "correction_rate": 0.01,
+      "teacher_accuracy": 0.99
+    },
+    "relocation_support": {
+      "corrected": 1,
+      "n": 200,
+      "correction_rate": 0.005,
+      "teacher_accuracy": 0.995
+    },
+    "application_deadline": {
+      "corrected": 0,
+      "n": 200,
+      "correction_rate": 0.0,
+      "teacher_accuracy": 1.0
+    },
+    "posting_language": {
+      "corrected": 1,
+      "n": 200,
+      "correction_rate": 0.005,
+      "teacher_accuracy": 0.995
+    }
+  }
+}

@@ -50,7 +50,7 @@ Each entry: context, options, choice, consequence.
 ## D-009 Split policy
 - 200 test, 3,000 train+val (300 val carved out), seed 13. Each split is half English, half German. Within a language, sources keep their natural share.
 - Whole companies go to one split (normalised company key with legal suffixes removed), so no company appears in two splits. Verified in MANIFEST `company_overlap`.
-- At most 25 postings per company (caps staffing agencies), and at most 3 per company in test, so the hand-checked set covers many employers.
+- At most 25 postings per company (caps staffing agencies), and at most 3 per company in test, so the gold set covers many employers.
 - Leftover postings are unused (counted in MANIFEST).
 
 - After the grouped split, `split.repair_split` swaps out postings that do not belong and keeps every other assignment (so labels already paid for in GPU time stay valid). It removes postings in another language, and test or validation postings whose *employer family* also appears in an earlier split (branches such as "Ferchau Niederlassung München" and "Ferchau GB Aviation Hamburg" have different company keys but one employer). Replacements match source and language and come from unused employers. MANIFEST records both counts and an `employer_family_overlap` check.
@@ -146,3 +146,8 @@ The first teacher run on real data surfaced four problems that the synthetic tes
 | The same employer in train and test under different branch names | A pre-run audit comparing employer names and shared text between splits | `split.employer_family` and the leak rule in `repair_split` | `test_split.py::test_employer_family_groups_branches`, `test_repair_split_removes_employer_family_leaks` |
 
 Known and accepted, measured by the gold review: the teacher often leaves `company` empty when the name is only in the board's metadata, and about 0.6% of postings fail twice because the teacher repeats skills until the output limit. Changing the prompt now would invalidate every label.
+
+## D-023 Gold labels: LLM-assisted correction, my decisions on ambiguous cases
+- **Context:** Every result is measured against the 200 test labels. Correcting the teacher's pre-labels alone would take about 10 hours, half the postings are German, and one reviewer drifts over 200 postings.
+- **Choice:** An LLM assistant read every test posting with its teacher pre-label and corrected it under the guide plus a written set of extra rules; it flagged 15 genuinely ambiguous postings, and I decided those. Details and rules in [GOLD_LABELLING.md](GOLD_LABELLING.md).
+- **Consequence:** The labels are consistent and every change is logged with a reason, but they are anchored on the teacher's answers, which favours the teacher. A blind 30-posting check by me is planned to measure agreement.
