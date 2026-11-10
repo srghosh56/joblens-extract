@@ -191,6 +191,9 @@ def test_costs_math():
     t = build_cost_table({"x": {}, "y": {"postings_per_s": 2.0, "hardware": "cpu"}})
     assert t["rows"]["x"]["usd_per_1k_selfhosted_estimate"] == "not measured"
     assert "c7i" in t["rows"]["y"]["price_basis"]
+    # The teacher ran on two T4s; the label must say so, not only the maths.
+    two = build_cost_table({"d": {"postings_per_s": 1.0, "gpus": 2}})
+    assert two["rows"]["d"]["price_basis"].startswith("2 x ")
     assert set(t["rows"]["y"]["usd_per_month_selfhosted_estimate"]) == {
         "10000",
         "100000",

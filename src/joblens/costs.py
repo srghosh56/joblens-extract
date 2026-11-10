@@ -66,11 +66,14 @@ def build_cost_table(measured: dict[str, dict[str, Any]]) -> dict[str, Any]:
         pps = m.get("postings_per_s")
         if pps:
             price = PRICES["cpu_hour" if m.get("hardware") == "cpu" else "t4_gpu_hour"]
+            units = int(m.get("gpus", 1))
             row["usd_per_1k_selfhosted_estimate"] = hardware_cost_per_1k(
-                pps, price["usd_per_hour"], int(m.get("gpus", 1))
+                pps, price["usd_per_hour"], units
             )
             row["throughput_postings_per_s"] = pps
-            row["price_basis"] = price["instance"]
+            row["price_basis"] = (
+                f"{units} x {price['instance']}" if units > 1 else price["instance"]
+            )
         else:
             row["usd_per_1k_selfhosted_estimate"] = "not measured"
         if m.get("mean_prompt_tokens") is not None and m.get("mean_completion_tokens") is not None:
