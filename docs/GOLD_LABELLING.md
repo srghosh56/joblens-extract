@@ -1,14 +1,14 @@
 # How the gold labels were made
 
-Every quality number in this project is measured against 200 gold labels: one per posting in the held-out test set (101 German, 99 English). This page explains how I made them, the rules I applied on top of the [labelling guide](LABELING_GUIDE.md), and their weak spots.
+Every quality number in this project is measured against 200 gold labels, one per posting in the held-out test set (101 German, 99 English). This page describes how they were produced, the rules applied on top of the [labelling guide](LABELING_GUIDE.md), and their known weaknesses.
 
 ## Method
-1. **Start from the teacher.** Each test posting was pre-filled with the teacher's label (Mistral-Small-24B, the same labels used for training).
-2. **LLM-assisted correction pass.** An LLM assistant read every posting in full next to its pre-label and corrected it under the labelling guide and the extra rules below. For German postings, it read the original German text. Every change was saved through the review app's own save path, so each label passed the schema validator, and every change is logged with its reason.
-3. **Ambiguous cases went to me.** Wherever the text supported two reasonable answers, the assistant flagged the posting instead of deciding. There were 15 flags (6 about work mode); I decided each one.
-4. **I checked my own early labels against the same rules.** I had reviewed the first 6 postings by hand before the assistant's pass; the same rules were then applied to them too.
+1. **Pre-fill from the teacher.** Each test posting was pre-filled with the teacher's label (Mistral-Small-24B; the same labels used for training).
+2. **LLM-assisted correction pass.** An LLM assistant read every posting in full next to its pre-label and corrected the label under the labelling guide and the extra rules below. German postings were read in the original German. Every change was saved through the review app's own save path, so each label passed the schema validator, and every change was logged with its reason.
+3. **Ambiguous cases decided by the author.** Where the text supported two reasonable answers, the assistant flagged the posting instead of deciding. There were 15 flags (6 about work mode); the author decided each one.
+4. **Earlier manual edits re-checked.** A few postings had been corrected by hand in the review app before the assisted pass; the same rules were then applied to them as well.
 
-I chose this over labelling all 200 alone: a second reader for every posting (with German read in the original) was more consistent than I could be alone over 200 postings, and it kept every judgement call in my hands.
+This approach was chosen over a single person labelling all 200 postings: a full second reading of every posting (with German read in the original) is more consistent than one reviewer over 200 postings, while every judgement call remains with the author.
 
 ## Extra rules
 The guide's rules apply as written. These are the decisions it leaves open, applied the same way to all 200 postings:
@@ -40,10 +40,10 @@ Share of the 200 teacher labels that changed, per field (`make gold`, exact comp
 
 The skill numbers look high because a list counts as changed if any item differs. The evaluation itself scores skills item by item.
 
-## Weak spots
+## Known weaknesses
 - **Anchoring.** The pass started from the teacher's answers. Where a teacher answer was plausible it was kept, which favours the teacher and system (d) in the results.
-- **One rule set, one assistant.** The extra rules are mine; another reviewer could reasonably decide some cases differently. A planned check: I label a random sample of 30 postings from scratch and report field-level agreement with these labels.
-- **The rules are stricter than the teacher's prompt.** The teacher was never told, for example, to leave out unrequested languages. Some of the teacher's (and the student's) errors are partly this mismatch, which I count as a finding, not a flaw of the gold set (see [RESULTS](RESULTS.md), finding 3).
+- **One rule set, one assistant.** The extra rules are the author's; another reviewer could reasonably decide some cases differently. Planned check: the author labels a random sample of 30 postings from scratch, and field-level agreement with these labels is reported.
+- **The rules are stricter than the teacher's prompt.** The teacher was never told, for example, to leave out unrequested languages. Some of the teacher's (and the student's) errors partly reflect this mismatch, which is treated as a finding rather than a flaw of the gold set (see [RESULTS](RESULTS.md), finding 3).
 
 ## Why the gold labels are not in this repository
-Two reasons. First, the labels are close copies of what each posting says (title, employer, salary, skills), and both job boards only allow reading postings, not republishing them ([DATA_SOURCES](DATA_SOURCES.md)). Second, some small employers on the boards are private individuals ([D-021](DECISIONS.md)). So I publish only the aggregate results (`artifacts/results/`). The test posting IDs are in `data/splits/ids_test.csv`, so anyone can look the postings up at the source.
+Two reasons. First, the labels are close copies of what each posting says (title, employer, salary, skills), and both job boards only allow reading postings, not republishing them ([DATA_SOURCES](DATA_SOURCES.md)). Second, some small employers on the boards are private individuals ([D-021](DECISIONS.md)). Only the aggregate results are therefore published (`artifacts/results/`). The test posting IDs are in `data/splits/ids_test.csv`, so anyone can look the postings up at the source.

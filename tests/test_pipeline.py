@@ -138,7 +138,6 @@ def test_kaggle_bundle(tmp_path):
         "01_train_qlora.ipynb",
         "02_eval_gpu.ipynb",
         "03_batch_and_gguf.ipynb",
-        "04_batch_backfill.ipynb",
     ]
     nb = json.loads((tmp_path / "ku" / "notebooks" / "00_teacher_labels.ipynb").read_text())
     assert any("!pip install" in "".join(c["source"]) for c in nb["cells"])

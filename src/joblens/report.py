@@ -28,6 +28,10 @@ def _fmt(v: Any, pct: bool = True) -> str:
     return NM
 
 
+def _int(v: Any) -> str:
+    return f"{round(v):,}" if isinstance(v, int | float) else NM
+
+
 def main_table(results: Path) -> str:
     summ = _load(results / "eval_summary.json")
     cols = [
@@ -174,9 +178,16 @@ def generated_section(results: Path, training: Path) -> str:
         f"- Postings after cleaning: {data.get('clean', {}).get('output', NM)}; "
         f"exact duplicates removed: {dd.get('exact_removed', NM)}; near duplicates removed "
         f"(MinHash LSH): {dd.get('near_removed', NM)}.",
-        f"- Posting length (Mistral tokens): p50 {tk.get('p50', NM)}, p95 {tk.get('p95', NM)}; "
-        f"max input tokens chosen: {data.get('tokens', {}).get('max_input_tokens', NM)}.",
-        f"- Split sizes: {data.get('split', NM)}.",
+        f"- Posting length (Mistral tokens): p50 {_int(tk.get('p50'))}, p95 {_int(tk.get('p95'))}; "
+        f"max input tokens chosen: {data.get('tokens', {}).get('max_input_tokens', NM)}; "
+        f"postings truncated: {_fmt(data.get('tokens', {}).get('share_truncated'))}.",
+        "- Split sizes: "
+        + (
+            ", ".join(f"{k} {v:,}" for k, v in data["split"].items())
+            if isinstance(data.get("split"), dict)
+            else NM
+        )
+        + ".",
         "",
         "### Main table (vs. gold)",
         main_table(results),

@@ -23,7 +23,7 @@ A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or E
 - **Repository:** https://github.com/srghosh56/joblens-extract
 
 ## Intended use
-- Back-filling a job-search database (the JobScout app) with structured fields: remote policy, seniority, skills, languages, contract type, salary, visa/relocation, deadline.
+- Back-filling a job-search database with structured fields: remote policy, seniority, skills, languages, contract type, salary, visa/relocation, deadline.
 - Batch extraction of postings from German job boards in German or English.
 
 ## Out-of-scope use
@@ -35,7 +35,7 @@ A LoRA adapter for `mistralai/Mistral-7B-Instruct-v0.3` that turns a German or E
 - **Sources:** Bundesagentur für Arbeit Jobsuche API (mostly German; unofficial community docs at jobsuche.api.bund.dev) and the [Arbeitnow](https://www.arbeitnow.com) Job Board API (mostly English). Terms are summarised in `docs/DATA_SOURCES.md`.
 - **No posting texts are distributed** in this repository or with the adapter. Only posting IDs/URLs, the schema and aggregate results are published; per-posting labels are not.
 - **Size:** 3,000 training postings (2,700 train + 300 validation) and 200 test postings, about half English and half German. Splits are grouped by company: no company appears in two splits. Exact counts are in `data/MANIFEST.json`.
-- **Labels:** produced by the open-weight teacher with JSON-schema constrained decoding (temperature 0), validated with Pydantic, with one re-ask on failure. The 200 test labels were corrected in an LLM-assisted pass, with my decisions on the ambiguous cases (`docs/GOLD_LABELLING.md`).
+- **Labels:** produced by the open-weight teacher with JSON-schema constrained decoding (temperature 0), validated with Pydantic, with one re-ask on failure. The 200 test labels were corrected in an LLM-assisted pass, with the author deciding the ambiguous cases (`docs/GOLD_LABELLING.md`).
 
 ## Label schema (v1.0.0)
 `title`, `company`, `locations[{city, country}]`, `remote_policy` (onsite/hybrid/remote/unknown), `seniority` (intern/junior/mid/senior/staff_plus/unknown), `min_years_experience`, `required_skills[]`, `nice_to_have_skills[]`, `languages_required[{language, level}]`, `english_sufficient` (derived: "no" if German ≥ good is required), `contract_type`, `contract_duration_months`, `salary{min, max, currency, period}`, `visa_sponsorship`, `relocation_support`, `application_deadline`, `posting_language`. Full guide: `docs/LABELING_GUIDE.md`.

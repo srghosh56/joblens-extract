@@ -2,14 +2,14 @@
 
 Each entry: context, options, choice, consequence.
 
-## D-001 Keep the project free: no paid API calls (2026-11-01)
-- **Context:** My first design used Mistral Small through the paid Mistral API as teacher and as benchmark system (d). I then decided to keep the project free, with no API costs and every step under my own control.
+## D-001 Keep the project free: no paid API calls
+- **Context:** The first design used Mistral Small through the paid Mistral API as teacher and as benchmark system (d). The project was then restricted to free resources, with no API costs and every step reproducible without a paid account.
 - **Options:** (1) Mistral API with a paid key; (2) an Apache-2.0 open-weight Mistral Small checkpoint run on Kaggle's free GPUs; (3) skip teacher labelling.
 - **Choice:** (2). The repo contains no Mistral API client and makes no paid calls.
 - **Consequence:** Teacher labelling runs on Kaggle (`notebooks/00_teacher_labels.ipynb`). System (d) becomes "Mistral Small 24B open-weight on GPU, JSON-schema constrained decoding" instead of "Mistral Small via API". The API's *list price* is still read from Mistral's public pricing page (reading a page costs nothing) to estimate what the API would cost. API latency is "not measured". The docs describe the teacher as an open-weight model, never as the Mistral API.
 
 ## D-002 Mistral's terms on training with outputs (checked 2026-11-01)
-- **Context:** I read Mistral's terms before labelling.
+- **Context:** Mistral's terms were checked before labelling.
 - **Finding:** The Commercial Terms of Service (https://legal.mistral.ai/terms/commercial-terms-of-service, effective September 25, 2026) §3.3 only restricts using *image* outputs to train competing image-generation products. The use-restrictions list (items (d) and (e)) forbids using Output to reverse engineer Mistral's products. Text outputs used to fine-tune another model are not prohibited.
 - **Choice:** Irrelevant after D-001, because no API outputs are used. The open-weight teacher is governed by its Apache-2.0 licence, which allows this use.
 - **Consequence:** Labels derive from an Apache-2.0 model, so the teacher's licence does not restrict the adapter. The data terms do (D-019).
@@ -21,7 +21,7 @@ Each entry: context, options, choice, consequence.
 - **Consequence:** `.env.example` sets this value. With any other value, the bundle builder falls back to the default and prints a warning.
 
 ## D-004 gitleaks installed project-locally
-- **Context:** I want no system-wide installs for this project, and gitleaks was not installed.
+- **Context:** The project should need no system-wide installs, and gitleaks was not installed.
 - **Choice:** `scripts/install_gitleaks.sh` downloads the pinned v8.30.1 release binary into `.tools/` (git-ignored) and verifies its SHA-256 against the release checksum file. The pre-commit config uses only `repo: local` hooks, and the git hook sets `PRE_COMMIT_HOME=.cache/pre-commit`.
 - **Consequence:** No global installs. A fresh clone needs `make setup`.
 
@@ -45,7 +45,7 @@ Each entry: context, options, choice, consequence.
 ## D-008 Maximum input length
 - **Rule:** the smallest multiple of 256 tokens ≥ p95 of posting length (Mistral tokenizer), capped at 2048 (`tokens.choose_max_input`). Longer postings are truncated from the end, where benefits and legal text usually sit.
 - **Why:** the full training sequence is prompt instructions (~450 tokens) + posting + JSON answer (~250–400 tokens). Capping the posting at 2048 keeps sequences ≤ ~3k tokens, which fits a 16 GB T4 at batch size 1 with 4-bit weights and gradient checkpointing.
-- **Measured:** the cap is 2048 tokens and 9.1% of postings are truncated. The full statistics are in `artifacts/results/data_stats.json`.
+- **Measured:** the cap is 2048 tokens and 4.9% of postings are truncated (after the escaped-HTML fix in D-006). The full statistics are in `artifacts/results/data_stats.json`.
 
 ## D-009 Split policy
 - 200 test, 3,000 train+val (300 val carved out), seed 13. Each split is half English, half German. Within a language, sources keep their natural share.
@@ -74,7 +74,7 @@ Each entry: context, options, choice, consequence.
 - `src/joblens/kaggle/*` (needs CUDA, vLLM, Unsloth) and `src/joblens/review_app.py` (Streamlit UI) are excluded from the local coverage measure (`pyproject.toml [tool.coverage.run] omit`). The logic they call (labelling loop, parsing, metrics, formatting, validation) lives in tested modules. The README states this exclusion next to the coverage number.
 
 ## D-013 Consistency check at temperature 0
-- At temperature 0, re-labelling mostly measures *system nondeterminism* (batch composition and floating-point order in batched GPU kernels), not model uncertainty. I still report it (10% of train, different order and batch size 16 instead of 64), and interpret it as an upper bound on label stability, not as label accuracy. Label accuracy comes from the gold review (`make gold`).
+- At temperature 0, re-labelling mostly measures *system nondeterminism* (batch composition and floating-point order in batched GPU kernels), not model uncertainty. It is still measured (10% of train, different order and batch size 16 instead of 64) and read as an upper bound on label stability, not as label accuracy. Measured on 268 training postings: per-field agreement between the two runs ranges from 92.2% (required skills) to 100% (`artifacts/teacher/consistency.json`, produced by notebook 00). Label accuracy comes from the gold review (`make gold`).
 
 ## D-014 Training hyperparameters (src/joblens/training_config.py)
 | Setting | Value | Why |
@@ -138,7 +138,7 @@ Each entry: context, options, choice, consequence.
 ## D-022 Data-quality log: what the first labelling runs exposed
 The first teacher run on real data surfaced four problems that the synthetic test fixtures could not. Each was fixed before training and is now guarded by a test in CI.
 
-| Problem | How I found it | Fix | Test |
+| Problem | How it was found | Fix | Test |
 |---|---|---|---|
 | JSONL records split inside a posting: `str.splitlines()` also breaks on U+2028, which JSON leaves unescaped | Kaggle smoke test crashed on line 1 of `teacher_inputs.jsonl` | `jsonio.jsonl_lines` splits on `"\n"` only; every reader uses it | `test_jsonio.py` |
 | French and Dutch postings labelled as English or German: the language vote only knew two languages | A failed posting's ID looked French; a stop-word count found 276 of 3,200 | `clean.is_other_language` and `split.out_of_scope` (full text and the part the model sees); `repair_split` replaces them | `test_split.py::test_is_other_language`, `test_out_of_scope_checks_the_part_the_model_sees`, `test_repair_split_replaces_other_languages_and_keeps_counts` |
@@ -147,7 +147,7 @@ The first teacher run on real data surfaced four problems that the synthetic tes
 
 Known and accepted, measured by the gold review: the teacher often leaves `company` empty when the name is only in the board's metadata, and about 0.6% of postings fail twice because the teacher repeats skills until the output limit. Changing the prompt now would invalidate every label.
 
-## D-023 Gold labels: LLM-assisted correction, my decisions on ambiguous cases
+## D-023 Gold labels: LLM-assisted correction, author decisions on ambiguous cases
 - **Context:** Every result is measured against the 200 test labels. Correcting the teacher's pre-labels alone would take about 10 hours, half the postings are German, and one reviewer drifts over 200 postings.
-- **Choice:** An LLM assistant read every test posting with its teacher pre-label and corrected it under the guide plus a written set of extra rules; it flagged 15 genuinely ambiguous postings, and I decided those. Details and rules in [GOLD_LABELLING.md](GOLD_LABELLING.md).
-- **Consequence:** The labels are consistent and every change is logged with a reason, but they are anchored on the teacher's answers, which favours the teacher. A blind 30-posting check by me is planned to measure agreement.
+- **Choice:** An LLM assistant read every test posting with its teacher pre-label and corrected it under the guide plus a written set of extra rules; it flagged 15 genuinely ambiguous postings, which the author decided. Details and rules in [GOLD_LABELLING.md](GOLD_LABELLING.md).
+- **Consequence:** The labels are consistent and every change is logged with a reason, but they are anchored on the teacher's answers, which favours the teacher. A blind 30-posting check by the author is planned to measure agreement.

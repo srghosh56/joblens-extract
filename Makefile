@@ -32,7 +32,7 @@ split:            ## grouped (by company) stratified train/val/test split + MANI
 
 data: clean dedup tokens split
 
-label:            ## prepare teacher inputs (labelling itself runs on Kaggle, see DECISIONS D-005)
+label:            ## prepare teacher inputs (labelling itself runs on Kaggle, see DECISIONS D-001)
 	$(JL) prepare-teacher
 
 review:           ## Streamlit gold-review app for the 200 test postings

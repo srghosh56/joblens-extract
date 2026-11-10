@@ -1,6 +1,6 @@
 # Data sources and terms (read 2026-11-01)
 
-Raw posting texts are **never** committed or published. The repository holds only posting IDs/URLs (`data/splits/ids_*.csv`), the split manifest (`data/MANIFEST.json`), the schema and aggregate results. Per-posting labels stay local. I read and accepted both sources' terms on 2026-11-01.
+Raw posting texts are **never** committed or published. The repository holds only posting IDs/URLs (`data/splits/ids_*.csv`), the split manifest (`data/MANIFEST.json`), the schema and aggregate results. Per-posting labels stay local. Both sources' terms were read and accepted on 2026-11-01.
 
 ## 1. Bundesagentur für Arbeit: Jobsuche API
 - Docs: https://jobsuche.api.bund.dev/ (OpenAPI 3.0 spec `openapi.yaml`, version 2.1.0) and https://github.com/bundesAPI/jobsuche-api (README).
@@ -10,7 +10,7 @@ Raw posting texts are **never** committed or published. The repository holds onl
   - `GET https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs?was=&wo=&page=&size=&angebotsart=`: search. Response has `ergebnisliste[]` with `referenznummer`, `stellenangebotsTitel`, `firma`, `stellenlokationen`, `externeURL`, plus `maxErgebnisse`, `page`, `size`.
   - `GET .../pc/v4/jobdetails/{base64(referenznummer)}`: detail with `stellenangebotsBeschreibung` (the posting text).
   - The older `/pc/v4/jobs` search returned HTTP 403 on 2026-11-01; v6 works.
-- Terms: no API-specific terms are published. The postings are employers' content hosted by the Agency. I treat the data as all-rights-reserved: personal research use only, no redistribution of texts.
+- Terms: no API-specific terms are published. The postings are employers' content hosted by the Agency. The data is treated as all-rights-reserved: personal research use only, no redistribution of texts.
 - Politeness: ≥ 1 s between requests, on-disk cache (each URL fetched once), descriptive User-Agent, retries with exponential backoff + jitter, stop on repeated 4xx.
 
 ## 2. Arbeitnow: Job Board API
@@ -21,4 +21,4 @@ Raw posting texts are **never** committed or published. The repository holds onl
 - Compliance: non-commercial research; no texts committed or published; README and model card link back to arbeitnow.com; ≥ 1 s between requests and caching.
 
 ## Plain-English summary
-Both sources allow *reading* postings for a personal, non-commercial project. Neither allows republishing the texts. So the repo and the Hugging Face release contain only IDs, URLs, the schema, aggregate results and a model trained on the labels. If either provider objects or revokes access, delete `data/raw/` and `data/interim/` and stop collecting.
+Both sources allow *reading* postings for a personal, non-commercial project. Neither allows republishing the texts. The repository and any Hugging Face release therefore contain only IDs, URLs, the schema, aggregate results and a model trained on the labels. If either provider objects or revokes access, delete `data/raw/` and `data/interim/` and stop collecting.

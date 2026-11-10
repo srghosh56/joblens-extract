@@ -133,7 +133,7 @@ def test_kaggle_bundle_and_notebooks_cli(tmp_path, monkeypatch):
     monkeypatch.setenv("STUDENT_MODEL", TOK)
     r = CliRunner()
     assert r.invoke(app, ["build-notebooks"]).exit_code == 0
-    assert (tmp_path / "notebooks" / "04_batch_backfill.ipynb").exists()
+    assert (tmp_path / "notebooks" / "03_batch_and_gguf.ipynb").exists()
     res = r.invoke(app, ["kaggle-bundle"])
     assert res.exit_code == 0, res.output
     assert '"truncated": 3' in res.output

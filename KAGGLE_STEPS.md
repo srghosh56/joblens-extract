@@ -49,13 +49,13 @@ Each notebook has a short mode, so a problem costs minutes rather than hours. Ad
 1. **Code** → **New Notebook** → **File** → **Import Notebook** → `kaggle_upload/notebooks/00_teacher_labels.ipynb`.
 2. Right panel: **Session options** → **Accelerator: GPU T4 x2**. **Internet: On** (to download the model and pip packages).
 3. **Add Input** → *Your Datasets* → `joblens-private`.
-4. **Run All**. Rough planning estimate (not a measurement): 1–3 h. The 24B AWQ model download is ~14 GB. Labelling ~3,200 postings with batch 64, then the 10% consistency re-run and 50 single-posting latency calls for (d). The notebook records the real time in `teacher_stats.json`.
+4. **Run All**. Measured in v1: about 3.3 h of labelling for all 3,200 postings, plus model loading. The 24B AWQ model download is ~14 GB. Labelling ~3,200 postings with batch 64, then the 10% consistency re-run and 50 single-posting latency calls for (d). The notebook records the real time in `teacher_stats.json`.
 5. When done: **Save Version** → *Save & Run All (Commit)* if you want the output to be attachable to notebook 01 (recommended). Outputs are in `/kaggle/working/out00/`.
 
 ## 4. Notebook 01: QLoRA training (both configs in parallel)
 1. Import `01_train_qlora.ipynb`. GPU T4 x2, Internet on.
 2. **Add Input**: `joblens-private` **and** the output of notebook 00 (*Add Input → Notebook Output Files → your notebook 00*).
-3. Run All. Rough planning estimate: 2–5 h (r16 on GPU 0 and r32 on GPU 1 at the same time, 2 epochs × ~2,700 examples, early stopping). Real times land in `runs/<cfg>/train_summary.json`. The printed `trainable parameters` line should read 41,943,040 (r16) and 83,886,080 (r32).
+3. Run All. Measured in v1: about 8.6 h (r16 on GPU 0 and r32 on GPU 1 at the same time, 7.75 h and 8.56 h; early stopping ended both at step 200 of 336). Real times land in `runs/<cfg>/train_summary.json`. The printed `trainable parameters` line should read 41,943,040 (r16) and 83,886,080 (r32).
 4. Save Version (commit) so 02 can attach the adapters. Download `out01.zip` (adapters + summaries + `mlflow.db`, no texts).
 
 ## 5. Notebook 02: benchmark (a)(b)(c)

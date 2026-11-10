@@ -43,7 +43,6 @@ NOTEBOOKS = [
     "01_train_qlora",
     "02_eval_gpu",
     "03_batch_and_gguf",
-    "04_batch_backfill",
 ]
 
 
